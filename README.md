@@ -23,9 +23,9 @@ O sistema busca simular o controle de materiais de um almoxarifado, permitindo f
 
 Atualmente o projeto possui as seguintes classes:
 
-- `Produto` — representa um produto cadastrado no sistema.
-- `Filial` — representa uma filial e seus produtos armazenados.
-- `ProdFilial` — representa a relação entre um produto e uma filial, incluindo quantidade e localização.
+- `Product` — representa um product cadastrado no sistema.
+- `Branch` — representa uma filial e seus produtos armazenados.
+- `BranchProduct` — representa a relação entre um product e uma filial, incluindo quantidade e localização.
 
 ## Tecnologias
 
