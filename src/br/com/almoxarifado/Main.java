@@ -1,8 +1,6 @@
 package br.com.almoxarifado;
 
-import br.com.almoxarifado.model.Branch;
-import br.com.almoxarifado.model.BranchProduct;
-import br.com.almoxarifado.model.Product;
+import br.com.almoxarifado.model.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,10 +35,24 @@ public class Main {
         BranchProduct newP = new BranchProduct();
         newP = branchSouth.findBranchProduct("1");
         System.out.println(newP.getProduct().getCode() + ": " + newP.getProduct().getDescription() + " - " + newP.getQuantity());
-        newP = branchSouth.findBranchProduct("4");
-        System.out.println(newP.getProduct().getCode() + ": " + newP.getProduct().getDescription() + " - " + newP.getQuantity());
 
-        System.out.println();
+        newP.addQuantity(100);
+        System.out.println(newP.getProduct().getCode() + ": " + newP.getProduct().getDescription() + " - " + newP.getQuantity());
+        newP.removeQuantity(20);
+        System.out.println(newP.getProduct().getCode() + ": " + newP.getProduct().getDescription() + " - " + newP.getQuantity());
+        List<Movement> list = newP.getMovementList();
+        String listar = "";
+        for (int i = 0; i < list.size(); i++) {
+
+
+            listar += list.get(i).getDate() + " - " + list.get(i).getMovementType() + " - " + list.get(i).getQuantity() + " - " + list.get(i).getDescription() + "\n";
+        }
+        System.out.println(listar);
+
+        //      System.out.println(movement.getDate() + " - " + movement.getDescription() + ":\nCodigo: " + movement.getBranchProduct().getProduct().getCode() + "\n Descrição: " + movement.getBranchProduct().getProduct().getDescription() +
+        //            "\nQuantity: " + movement.getQuantity());
+
+
 
 
 

@@ -51,10 +51,25 @@ public class Branch {
 
         } else {
             BranchProduct existingProduct = findBranchProduct(chave);
-          boolean result =  existingProduct.addQuantity(quantity);
+            boolean result = existingProduct.addQuantity(quantity);
             return result;
         }
     }
+
+    public boolean productOutPut(Product product, int quantity) {
+        boolean search;
+        String chave = product.getCode();
+        search = products.containsKey(chave);
+        if (!search) {
+            return false;
+        } else {
+            BranchProduct existingProduct;
+            existingProduct = findBranchProduct(chave);
+            boolean result = existingProduct.removeQuantity(quantity);
+            return result;
+        }
+    }
+
 
     public BranchProduct findBranchProduct(String code) {
         return products.get(code);
