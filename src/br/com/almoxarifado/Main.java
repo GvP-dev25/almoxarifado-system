@@ -4,7 +4,9 @@ import br.com.almoxarifado.model.Branch;
 import br.com.almoxarifado.model.BranchProduct;
 import br.com.almoxarifado.model.Product;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Main {
 
@@ -17,19 +19,39 @@ public class Main {
 
         Product newProdcut3 = new Product("3", "Parafuso 1/2 x 3");
 
+        Product newProduct4 = new Product("4", "Parafuso 1/2 x 4");
+
         Branch branchSouth = new Branch("001", "Sul");
 
-        BranchProduct product1 = new BranchProduct(newProduct, branchSouth, 10, "C003.P023.A.01");
-        BranchProduct product2 = new BranchProduct(newProduct2, branchSouth, 300, "C003.P023.B.01");
-        BranchProduct product3 = new BranchProduct(newProdcut3, branchSouth, 150, "C003.P023.C.01");
+        BranchProduct product1 = new BranchProduct(newProduct, branchSouth, 10);
+        BranchProduct product2 = new BranchProduct(newProduct2, branchSouth, 300);
+        BranchProduct product3 = new BranchProduct(newProdcut3, branchSouth, 150);
 
         branchSouth.addProduct(product1);
         branchSouth.addProduct(product2);
         branchSouth.addProduct(product3);
 
+        branchSouth.productReceipt(newProduct, 20);
+        branchSouth.productReceipt(newProduct4, -30);
+
+        BranchProduct newP = new BranchProduct();
+        newP = branchSouth.findBranchProduct("1");
+        System.out.println(newP.getProduct().getCode() + ": " + newP.getProduct().getDescription() + " - " + newP.getQuantity());
+        newP = branchSouth.findBranchProduct("4");
+        System.out.println(newP.getProduct().getCode() + ": " + newP.getProduct().getDescription() + " - " + newP.getQuantity());
+
+        System.out.println();
+
+
+
+        /*
 
         String message = "";
         List<BranchProduct> products = branchSouth.getProducts();
+
+        product1.setLocation("C003.P023.A.D01");
+        product2.setLocation("C003.P023.B.D01");
+        product3.setLocation("C003.P023.C.D01");
 
 
         for (BranchProduct prod : products) {
@@ -52,6 +74,8 @@ public class Main {
         } else {
             System.out.println("Produto não encontrado!");
         }
+
+         */
     }
 
 

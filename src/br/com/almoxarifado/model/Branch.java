@@ -1,19 +1,16 @@
 package br.com.almoxarifado.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class Branch {
     private String code, name;
-    private List<BranchProduct> products;
-    private List<BranchProduct> productsView;
+    private final Map<String, BranchProduct> products;
 
     public Branch(String code, String name) {
         this.code = code;
         this.name = name;
-        products = new ArrayList<>();
-        productsView = Collections.unmodifiableList(products);
+        products = new HashMap<>();
+
     }
 
     public String getCode() {
@@ -25,27 +22,42 @@ public class Branch {
     }
 
     public List<BranchProduct> getProducts() {
-        return productsView;
+        return products.values().stream().toList();
     }
 
     public boolean addProduct(BranchProduct product) {
-        BranchProduct search;
-        search = findBranchProduct(product.getProduct().getCode());
-        if (search == null) {
-            products.add(product);
+        boolean search;
+        String chave = product.getProduct().getCode();
+        search = products.containsKey(chave);
+        if (!search) {
+            products.put(chave, product);
             return true;
         }
         return false;
     }
 
-    public BranchProduct findBranchProduct(String code) {
-        for (BranchProduct searchProducts : this.productsView) {
-            if (searchProducts.getProduct().getCode().equals(code)) {
-                return searchProducts;
-            }
-        }
 
-        return null;
+    public boolean productReceipt(Product product, int quantity) {
+        boolean search;
+        String chave = product.getCode();
+        search = products.containsKey(chave);
+        if (!search) {
+            if (quantity <= 0) {
+                return false;
+            }
+            BranchProduct newProduct = new BranchProduct(product, this, quantity);
+            products.put(chave, newProduct);
+            return true;
+
+        } else {
+            BranchProduct existingProduct = findBranchProduct(chave);
+          boolean result =  existingProduct.addQuantity(quantity);
+            return result;
+        }
+    }
+
+    public BranchProduct findBranchProduct(String code) {
+        return products.get(code);
     }
 
 

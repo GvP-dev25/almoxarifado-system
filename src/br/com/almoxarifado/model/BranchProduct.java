@@ -3,18 +3,29 @@ package br.com.almoxarifado.model;
 public class BranchProduct {
     private Product product;
     private Branch filial;
-    private int quantidade;
+    private int quantity;
     private String location;
 
     public BranchProduct() {
     }
 
-    public BranchProduct(Product product, Branch filial, int quantidade, String localizacao) {
+    public BranchProduct(Product product, Branch filial, int quantity) {
         this.product = product;
         this.filial = filial;
-        this.quantidade = quantidade;
-        this.location = localizacao;
+        this.quantity = quantity;
+        this.location = null;
     }
+
+
+    public boolean addQuantity(int quantity) {
+        if (quantity <= 0) {
+            return false;
+        } else {
+            this.quantity += quantity;
+            return true;
+        }
+    }
+
 
     public Product getProduct() {
         return product;
@@ -25,7 +36,7 @@ public class BranchProduct {
     }
 
     public int getQuantity() {
-        return quantidade;
+        return quantity;
     }
 
     public String getLocation() {
