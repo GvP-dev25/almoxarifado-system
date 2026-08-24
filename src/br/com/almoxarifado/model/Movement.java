@@ -1,8 +1,10 @@
 package br.com.almoxarifado.model;
 
+import java.util.UUID;
 import java.time.LocalDateTime;
 
 public class Movement {
+    private UUID uuid;
     private MovementType movementType;
     private LocalDateTime date;
     private int quantity;
@@ -10,6 +12,7 @@ public class Movement {
 
 
     public Movement(int quantity, MovementType type, String description) {
+        uuid = UUID.randomUUID();
         this.quantity = quantity;
         this.movementType = type;
         this.description = description;
@@ -18,6 +21,10 @@ public class Movement {
 
     public MovementType getMovementType() {
         return movementType;
+    }
+
+    public UUID getUuid() {
+        return uuid;
     }
 
     public LocalDateTime getDate() {

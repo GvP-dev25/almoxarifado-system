@@ -3,6 +3,7 @@ package br.com.almoxarifado.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 public class BranchProduct {
     private Product product;
@@ -22,6 +23,9 @@ public class BranchProduct {
         this.location = null;
         movementList = new ArrayList<>();
         movementView = Collections.unmodifiableList(movementList);
+        if(quantity > 0 ){
+            registerMovement(quantity,MovementType.ENTRY, "Initial stock");
+        }
     }
 
 
@@ -45,6 +49,11 @@ public class BranchProduct {
         registerMovement(quantity, MovementType.OUTPUT, "Request");
         return true;
     }
+
+   // public boolean reverseEntry(UUID id){
+
+
+    //}
 
      private void registerMovement(int quantity, MovementType type, String description) {
         Movement movement = new Movement(quantity, type, description);

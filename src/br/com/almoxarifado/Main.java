@@ -45,7 +45,7 @@ public class Main {
         for (int i = 0; i < list.size(); i++) {
 
 
-            listar += list.get(i).getDate() + " - " + list.get(i).getMovementType() + " - " + list.get(i).getQuantity() + " - " + list.get(i).getDescription() + "\n";
+            listar += list.get(i).getUuid() + "//" + list.get(i).getDate() + " - " + list.get(i).getMovementType() + " - " + list.get(i).getQuantity() + " - " + list.get(i).getDescription() + "\n";
         }
         System.out.println(listar);
 
