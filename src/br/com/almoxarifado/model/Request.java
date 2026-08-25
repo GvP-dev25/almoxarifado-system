@@ -20,14 +20,13 @@ public class Request {
     }
 
     public boolean addProductRequest(BranchProduct product, int requestedQuantity) {
+        ProductRequest findProductRequest = findProductRequest(product.getProduct().getCode());
         if (requestedQuantity <= 0) {
             return false;
         }
-        for (int i = 0; i < productRequestList.size(); i++) {
-            if (productRequestList.get(i).getBranchProduct().getProduct().getCode().equals(product.getProduct().getCode())) {
-                productRequestList.get(i).addRequestQuantity(requestedQuantity);
-                return true;
-            }
+        if (findProductRequest != null) {
+            findProductRequest.addRequestQuantity(requestedQuantity);
+            return true;
         }
         ProductRequest newProductRequest = new ProductRequest(product, requestedQuantity);
         productRequestList.add(newProductRequest);
@@ -35,13 +34,30 @@ public class Request {
     }
 
     public boolean attendedProduct(String code, int attendedQuantity) {
-        for (int i = 0; i < productRequestList.size(); i++) {
-            if (productRequestList.get(i).getBranchProduct().getProduct().getCode().equals(code)) {
-                productRequestList.get(i).attendedQuantity(attendedQuantity);
-                return true;
-            }
+        ProductRequest findProductRequest = findProductRequest(code);
+        if (findProductRequest != null) {
+           boolean result = findProductRequest.attendedQuantity(attendedQuantity);
+            return result;
         }
         return false;
+    }
+
+    public boolean reversalProduct(String code) {
+        ProductRequest findProductRequest = findProductRequest(code);
+        if (findProductRequest != null) {
+           boolean result = findProductRequest.reversal();
+        return result;
+        }
+        return false;
+    }
+
+    public ProductRequest findProductRequest(String code) {
+        for (int i = 0; i < productRequestList.size(); i++) {
+            if (productRequestList.get(i).getBranchProduct().getProduct().getCode().equals(code)) {
+                return productRequestList.get(i);
+            }
+        }
+        return null;
     }
 
 

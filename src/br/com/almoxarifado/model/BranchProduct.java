@@ -50,6 +50,17 @@ public class BranchProduct {
         return true;
     }
 
+    public boolean removeQuantityReversal(int quantity) {
+        if (quantity <= 0) {
+            return false;
+        } else if (this.quantity < quantity) {
+            return false;
+        }
+        this.quantity += quantity;
+        registerMovement(quantity, MovementType.REVERSAL, "Reversal");
+        return true;
+    }
+
    // public boolean reverseEntry(UUID id){
 
 

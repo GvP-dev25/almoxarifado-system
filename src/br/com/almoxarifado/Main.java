@@ -88,6 +88,21 @@ public class Main {
         System.out.println(out);
 
 
+        request.reversalProduct("1");
+
+
+        System.out.println("Saldo final: " + newP.getQuantity());
+        boolean result = request.reversalProduct("1");
+
+        System.out.println(result);
+
+        boolean falso = request.reversalProduct("4");
+
+        System.out.println("Saldo final: " + product4.getQuantity());
+        System.out.println(falso);
+        boolean test2 = request.reversalProduct("1");
+        System.out.println(test2);
+
     }
 
 
