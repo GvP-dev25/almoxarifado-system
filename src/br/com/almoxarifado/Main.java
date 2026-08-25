@@ -22,8 +22,9 @@ public class Main {
         Branch branchSouth = new Branch("001", "Sul");
 
         BranchProduct product1 = new BranchProduct(newProduct, branchSouth, 10);
-        BranchProduct product2 = new BranchProduct(newProduct2, branchSouth, 300);
-        BranchProduct product3 = new BranchProduct(newProdcut3, branchSouth, 150);
+        BranchProduct product2 = new BranchProduct(newProduct2, branchSouth, 60);
+        BranchProduct product3 = new BranchProduct(newProdcut3, branchSouth, 200);
+        BranchProduct product4 = new BranchProduct(newProduct4, branchSouth, 60);
 
         branchSouth.addProduct(product1);
         branchSouth.addProduct(product2);
@@ -36,58 +37,57 @@ public class Main {
         newP = branchSouth.findBranchProduct("1");
         System.out.println(newP.getProduct().getCode() + ": " + newP.getProduct().getDescription() + " - " + newP.getQuantity());
 
-        newP.addQuantity(100);
+        newP.addQuantity(220);
         System.out.println(newP.getProduct().getCode() + ": " + newP.getProduct().getDescription() + " - " + newP.getQuantity());
         newP.removeQuantity(20);
         System.out.println(newP.getProduct().getCode() + ": " + newP.getProduct().getDescription() + " - " + newP.getQuantity());
         List<Movement> list = newP.getMovementList();
-        String listar = "";
-        for (int i = 0; i < list.size(); i++) {
+
+        Request request = new Request("123", branchSouth);
 
 
-            listar += list.get(i).getUuid() + "//" + list.get(i).getDate() + " - " + list.get(i).getMovementType() + " - " + list.get(i).getQuantity() + " - " + list.get(i).getDescription() + "\n";
+        System.out.println("Saldo inicial: " + newP.getQuantity());
+
+        System.out.println("Saldo inicial: " + product2.getQuantity());
+
+        System.out.println("Saldo inicial: " + product3.getQuantity());
+
+        System.out.println("Saldo inicial: " + product4.getQuantity());
+
+
+        request.addProductRequest(newP, 100);
+        request.attendedProduct("1", 100);
+
+        request.addProductRequest(product2, 100);
+        request.attendedProduct("2", 60);
+
+        request.addProductRequest(product3, 100);
+        request.attendedProduct("3", 150);
+
+        request.addProductRequest(product4, 100);
+        request.attendedProduct("4", 80);
+
+        System.out.println("Saldo final: " + newP.getQuantity());
+
+        System.out.println("Saldo final: " + product2.getQuantity());
+
+        System.out.println("Saldo final: " + product3.getQuantity());
+
+        System.out.println("Saldo final: " + product4.getQuantity());
+
+        request.attendedProduct("3", 100);
+
+        System.out.println("Saldo final: " + product3.getQuantity());
+
+        String out = "";
+
+        for (int i = 0; i < request.getProductRequestList().size(); i++) {
+            out += ("Request number: " + request.getNumberRequest() + "\nDescription: " + request.getProductRequestList().get(i).getBranchProduct().getProduct().getDescription() +
+                    "\nQuantity Requested: " + request.getProductRequestList().get(i).getRequestedQuantity() + "\nQuantity Attended: " + request.getProductRequestList().get(i).getAttendedQuantity()) + "\n";
         }
-        System.out.println(listar);
-
-        //      System.out.println(movement.getDate() + " - " + movement.getDescription() + ":\nCodigo: " + movement.getBranchProduct().getProduct().getCode() + "\n Descrição: " + movement.getBranchProduct().getProduct().getDescription() +
-        //            "\nQuantity: " + movement.getQuantity());
+        System.out.println(out);
 
 
-
-
-
-        /*
-
-        String message = "";
-        List<BranchProduct> products = branchSouth.getProducts();
-
-        product1.setLocation("C003.P023.A.D01");
-        product2.setLocation("C003.P023.B.D01");
-        product3.setLocation("C003.P023.C.D01");
-
-
-        for (BranchProduct prod : products) {
-            message += "Code: " + prod.getProduct().getCode() + "\nDescription: "
-                    + prod.getProduct().getDescription() + "\nBranch: " + prod.getBranch().getCode() + "\nName: "
-                    + prod.getBranch().getName() + "\nQuantity: " + prod.getQuantity() + "\nLocation: "
-                    + prod.getLocation() + "\n -----------------------------------------";
-        }
-
-
-        System.out.println(message);
-
-        BranchProduct search = new BranchProduct();
-
-        search = branchSouth.findBranchProduct("10");
-
-        if (search != null) {
-            System.out.println("Branch: " + search.getBranch().getName() + "\n Code: " + search.getProduct().getCode() +
-                    "\nDescription: " + search.getProduct().getDescription());
-        } else {
-            System.out.println("Produto não encontrado!");
-        }
-
-         */
     }
 
 
