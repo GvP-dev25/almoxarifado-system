@@ -1,5 +1,8 @@
 package br.com.almoxarifado.model;
 
+import br.com.almoxarifado.exception.CodeNotFoundException;
+import br.com.almoxarifado.exception.InvalidQuantityException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,36 +22,35 @@ public class Request {
         productRequestView = Collections.unmodifiableList(productRequestList);
     }
 
-    public boolean addProductRequest(BranchProduct product, int requestedQuantity) {
+    public void addProductRequest(BranchProduct product, int requestedQuantity) {
         ProductRequest findProductRequest = findProductRequest(product.getProduct().getCode());
         if (requestedQuantity <= 0) {
-            return false;
+            throw new InvalidQuantityException();
         }
         if (findProductRequest != null) {
             findProductRequest.addRequestQuantity(requestedQuantity);
-            return true;
+            return;
         }
         ProductRequest newProductRequest = new ProductRequest(product, requestedQuantity);
         productRequestList.add(newProductRequest);
-        return true;
     }
 
-    public boolean attendedProduct(String code, int attendedQuantity) {
+    public void attendedProduct(String code, int attendedQuantity) {
         ProductRequest findProductRequest = findProductRequest(code);
         if (findProductRequest != null) {
-            boolean result = findProductRequest.attendedQuantity(attendedQuantity, OriginType.REQUEST, numberRequest);
-            return result;
+            findProductRequest.attendedQuantity(attendedQuantity, OriginType.REQUEST, numberRequest);
+            return;
         }
-        return false;
+        throw new CodeNotFoundException();
     }
 
-    public boolean reversalProduct(String code) {
+    public void reversalProduct(String code) {
         ProductRequest findProductRequest = findProductRequest(code);
         if (findProductRequest != null) {
-            boolean result = findProductRequest.reversal(OriginType.REQUEST, numberRequest);
-            return result;
+            findProductRequest.reversal(OriginType.REQUEST, numberRequest);
+            return;
         }
-        return false;
+        throw new CodeNotFoundException();
     }
 
     public ProductRequest findProductRequest(String code) {

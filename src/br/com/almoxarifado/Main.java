@@ -2,10 +2,6 @@ package br.com.almoxarifado;
 
 import br.com.almoxarifado.model.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class Main {
 
     public static void main(String[] args) {
@@ -22,95 +18,45 @@ public class Main {
         Branch branchSouth = new Branch("001", "Sul");
 
         BranchProduct product1 = new BranchProduct(newProduct, branchSouth, 100);
-        BranchProduct product2 = new BranchProduct(newProduct2, branchSouth, 60);
-        BranchProduct product3 = new BranchProduct(newproduct3, branchSouth, 200);
-        BranchProduct product4 = new BranchProduct(newProduct4, branchSouth, 60);
+        BranchProduct product2 = new BranchProduct(newProduct2, branchSouth, 100);
+        BranchProduct product3 = new BranchProduct(newproduct3, branchSouth, 100);
+        BranchProduct product4 = new BranchProduct(newProduct4, branchSouth, 100);
 
         branchSouth.addProduct(product1);
         branchSouth.addProduct(product2);
         branchSouth.addProduct(product3);
 
-        //branchSouth.productReceipt(newProduct, 20);
-        //branchSouth.productReceipt(newProduct4, -30);
-
-        BranchProduct newP = new BranchProduct();
-        newP = branchSouth.findBranchProduct("1");
-
 
         Request request = new Request("123", branchSouth);
-
-
-        System.out.println("Saldo inicial: " + newP.getQuantity());
-
-        System.out.println("Saldo inicial: " + product2.getQuantity());
-
-        System.out.println("Saldo inicial: " + product3.getQuantity());
-
-        System.out.println("Saldo inicial: " + product4.getQuantity());
-
-
-        request.addProductRequest(newP, 50);
+        request.addProductRequest(product1, 50);
         request.attendedProduct("1", 50);
 
         request.addProductRequest(product2, 100);
         request.attendedProduct("2", 60);
 
         request.addProductRequest(product3, 100);
-        request.attendedProduct("3", 150);
+        request.attendedProduct("3", 100);
 
         request.addProductRequest(product4, 100);
         request.attendedProduct("4", 80);
 
-        System.out.println("Saldo final: " + newP.getQuantity());
+
+        request.reversalProduct("1");
+
+        Invoice invoice1 = new Invoice("123", branchSouth);
+        invoice1.addProductInvoice(newProduct, 500, Destination.STOCK);
+        invoice1.addProductInvoice(newProduct2, 200, Destination.STOCK);
+        invoice1.addProductInvoice(newproduct3, 100, Destination.DIRECT);
+        invoice1.processInvoice();
+
+
+        System.out.println("Saldo final: " + product1.getQuantity());
 
         System.out.println("Saldo final: " + product2.getQuantity());
 
         System.out.println("Saldo final: " + product3.getQuantity());
 
         System.out.println("Saldo final: " + product4.getQuantity());
-
-        request.attendedProduct("3", 100);
-
-        System.out.println("Saldo final: " + product3.getQuantity());
-
-        request.reversalProduct("1");
-        boolean secondReversal = request.reversalProduct("1");
-
-        System.out.println("Saldo final Reversal: " + newP.getQuantity());
-        System.out.println("Second Reversal: " + secondReversal);
-
-
-        String out = "";
-
-        for (int i = 0; i < request.getProductRequestList().size(); i++) {
-            out += ("Request number: " + request.getNumberRequest() + "\nDescription: " + request.getProductRequestList().get(i).getBranchProduct().getProduct().getDescription() +
-                    "\nQuantity Requested: " + request.getProductRequestList().get(i).getRequestedQuantity() + "\nQuantity Attended: " + request.getProductRequestList().get(i).getAttendedQuantity()) + "\n";
-        }
-        System.out.println(out);
-
-
-        System.out.println("Saldo inicial: " + newP.getQuantity());
-
-        System.out.println("Saldo inicial: " + product2.getQuantity());
-
-        System.out.println("Saldo inicial: " + product3.getQuantity());
-
-        Invoice invoice1 = new Invoice("123", branchSouth);
-        invoice1.addProductInvoice(newProduct, 1000, Destination.STOCK);
-        invoice1.addProductInvoice(newProduct2, 1000, Destination.STOCK);
-        invoice1.addProductInvoice(newproduct3, 1000, Destination.DIRECT);
-        invoice1.processInvoice();
-        invoice1.processInvoice();
-
-        System.out.println("Saldo final: " + newP.getQuantity());
-        System.out.println("Saldo final: " + product2.getQuantity());
-        System.out.println("Saldo final: " + product3.getQuantity());
-
-
-        Request request1 = new Request("155",branchSouth);
-
-
-
 
 
         String movement = "";

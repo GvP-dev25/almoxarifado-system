@@ -1,5 +1,8 @@
 package br.com.almoxarifado.model;
 
+import br.com.almoxarifado.exception.InvalidQuantityException;
+import br.com.almoxarifado.exception.InvoiceAlreadyProcessedException;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ArrayList;
@@ -22,27 +25,27 @@ public class Invoice {
         processed = false;
     }
 
-    public boolean addProductInvoice(Product product, int quantity, Destination destination) {
+    public void addProductInvoice(Product product, int quantity, Destination destination) {
         if (quantity <= 0) {
-            return false;
+            throw new InvalidQuantityException();
         }
         ProductInvoice newProductInvoice = new ProductInvoice(product, quantity, destination);
         productInvoiceList.add(newProductInvoice);
-        return true;
     }
 
     public void processInvoice() {
-        if (!processed) {
-            for (int i = 0; i < productInvoiceList.size(); i++) {
-                Destination destination = productInvoiceList.get(i).getDestination();
-                if (destination == Destination.STOCK) {
-                    BranchProduct branchProduct = branchDestination.findBranchProduct(productInvoiceList.get(i).getProduct().getCode());
-                    if (branchProduct != null) {
-                        branchProduct.addQuantity(productInvoiceList.get(i).getQuantity(), OriginType.INVOICE, numberInvoice);
-                    } else {
-                        BranchProduct newBranchProduct = new BranchProduct(productInvoiceList.get(i).getProduct(), branchDestination, productInvoiceList.get(i).getQuantity());
-                        branchDestination.addProduct(newBranchProduct);
-                    }
+        if (processed) {
+            throw new InvoiceAlreadyProcessedException();
+        }
+        for (int i = 0; i < productInvoiceList.size(); i++) {
+            Destination destination = productInvoiceList.get(i).getDestination();
+            if (destination == Destination.STOCK) {
+                BranchProduct branchProduct = branchDestination.findBranchProduct(productInvoiceList.get(i).getProduct().getCode());
+                if (branchProduct != null) {
+                    branchProduct.addQuantity(productInvoiceList.get(i).getQuantity(), OriginType.INVOICE, numberInvoice);
+                } else {
+                    BranchProduct newBranchProduct = new BranchProduct(productInvoiceList.get(i).getProduct(), branchDestination, productInvoiceList.get(i).getQuantity());
+                    branchDestination.addProduct(newBranchProduct);
                 }
             }
         }

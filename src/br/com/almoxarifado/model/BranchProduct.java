@@ -1,9 +1,11 @@
 package br.com.almoxarifado.model;
 
+import br.com.almoxarifado.exception.InsufficientStockException;
+import br.com.almoxarifado.exception.InvalidQuantityException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 public class BranchProduct {
     private Product product;
@@ -29,36 +31,30 @@ public class BranchProduct {
     }
 
 
-    public boolean addQuantity(int quantity, OriginType originType, String originNumber) {
+    public void addQuantity(int quantity, OriginType originType, String originNumber) {
         if (quantity <= 0) {
-            return false;
-        } else {
-            this.quantity += quantity;
-            registerMovement(quantity, MovementType.ENTRY, originType, originNumber);
-            return true;
+            throw new InvalidQuantityException();
         }
+        this.quantity += quantity;
+        registerMovement(quantity, MovementType.ENTRY, originType, originNumber);
     }
 
-    public boolean removeQuantity(int quantity, OriginType originType, String originNumber) {
+    public void removeQuantity(int quantity, OriginType originType, String originNumber) {
         if (quantity <= 0) {
-            return false;
+            throw new InvalidQuantityException();
         } else if (this.quantity < quantity) {
-            return false;
+            throw new InsufficientStockException("Insufficient Stock. Available: " + this.quantity + ", requested: " + quantity);
         }
         this.quantity -= quantity;
         registerMovement(quantity, MovementType.OUTPUT, originType, originNumber);
-        return true;
     }
 
-    public boolean removeQuantityReversal(int quantity, OriginType originType, String originNumber) {
+    public void removeQuantityReversal(int quantity, OriginType originType, String originNumber) {
         if (quantity <= 0) {
-            return false;
-        } else if (this.quantity < quantity) {
-            return false;
+            throw new InvalidQuantityException();
         }
         this.quantity += quantity;
         registerMovement(quantity, MovementType.REVERSAL, originType, originNumber);
-        return true;
     }
 
     // public boolean reverseEntry(UUID id){
