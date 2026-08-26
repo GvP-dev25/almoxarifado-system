@@ -32,13 +32,13 @@ public class Invoice {
     }
 
     public void processInvoice() {
-        if(!processed) {
+        if (!processed) {
             for (int i = 0; i < productInvoiceList.size(); i++) {
                 Destination destination = productInvoiceList.get(i).getDestination();
                 if (destination == Destination.STOCK) {
                     BranchProduct branchProduct = branchDestination.findBranchProduct(productInvoiceList.get(i).getProduct().getCode());
                     if (branchProduct != null) {
-                        branchProduct.addQuantity(productInvoiceList.get(i).getQuantity());
+                        branchProduct.addQuantity(productInvoiceList.get(i).getQuantity(), OriginType.INVOICE, numberInvoice);
                     } else {
                         BranchProduct newBranchProduct = new BranchProduct(productInvoiceList.get(i).getProduct(), branchDestination, productInvoiceList.get(i).getQuantity());
                         branchDestination.addProduct(newBranchProduct);

@@ -23,51 +23,51 @@ public class BranchProduct {
         this.location = null;
         movementList = new ArrayList<>();
         movementView = Collections.unmodifiableList(movementList);
-        if(quantity > 0 ){
-            registerMovement(quantity,MovementType.ENTRY, "Initial stock");
+        if (quantity > 0) {
+            registerMovement(quantity, MovementType.ENTRY, OriginType.INITIALSTOCK, "01");
         }
     }
 
 
-    public boolean addQuantity(int quantity) {
+    public boolean addQuantity(int quantity, OriginType originType, String originNumber) {
         if (quantity <= 0) {
             return false;
         } else {
             this.quantity += quantity;
-            registerMovement(quantity, MovementType.ENTRY, "Tax Invoice");
+            registerMovement(quantity, MovementType.ENTRY, originType, originNumber);
             return true;
         }
     }
 
-    public boolean removeQuantity(int quantity) {
+    public boolean removeQuantity(int quantity, OriginType originType, String originNumber) {
         if (quantity <= 0) {
             return false;
         } else if (this.quantity < quantity) {
             return false;
         }
         this.quantity -= quantity;
-        registerMovement(quantity, MovementType.OUTPUT, "Request");
+        registerMovement(quantity, MovementType.OUTPUT, originType, originNumber);
         return true;
     }
 
-    public boolean removeQuantityReversal(int quantity) {
+    public boolean removeQuantityReversal(int quantity, OriginType originType, String originNumber) {
         if (quantity <= 0) {
             return false;
         } else if (this.quantity < quantity) {
             return false;
         }
         this.quantity += quantity;
-        registerMovement(quantity, MovementType.REVERSAL, "Reversal");
+        registerMovement(quantity, MovementType.REVERSAL, originType, originNumber);
         return true;
     }
 
-   // public boolean reverseEntry(UUID id){
+    // public boolean reverseEntry(UUID id){
 
 
     //}
 
-     private void registerMovement(int quantity, MovementType type, String description) {
-        Movement movement = new Movement(quantity, type, description);
+    private void registerMovement(int quantity, MovementType type, OriginType originType, String originNumber) {
+        Movement movement = new Movement(quantity, type, originType, originNumber);
         movementList.add(movement);
 
     }

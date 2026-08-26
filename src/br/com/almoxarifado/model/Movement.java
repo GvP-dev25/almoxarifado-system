@@ -8,14 +8,16 @@ public class Movement {
     private MovementType movementType;
     private LocalDateTime date;
     private int quantity;
-    private String description;
+    private String originNumber;
+    private OriginType originType;
 
 
-    public Movement(int quantity, MovementType type, String description) {
+    public Movement(int quantity, MovementType type, OriginType originType, String originNumber) {
         uuid = UUID.randomUUID();
         this.quantity = quantity;
         this.movementType = type;
-        this.description = description;
+        this.originType = originType;
+        this.originNumber = originNumber;
         this.date = LocalDateTime.now();
     }
 
@@ -35,8 +37,11 @@ public class Movement {
         return quantity;
     }
 
-    public String getDescription() {
-        return description;
+    public String getOriginNumber() {
+        return originNumber;
     }
 
+    public OriginType getOriginType() {
+        return originType;
+    }
 }

@@ -36,6 +36,7 @@ public class Branch {
         return false;
     }
 
+/*   Methods commented out for future review. Their responsibilities changed after the creation of new classes.
 
     public boolean productReceipt(Product product, int quantity) {
         boolean search;
@@ -69,7 +70,7 @@ public class Branch {
             return result;
         }
     }
-
+*/
 
     public BranchProduct findBranchProduct(String code) {
         return products.get(code);

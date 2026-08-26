@@ -16,14 +16,14 @@ public class ProductRequest {
     }
 
 
-    public boolean attendedQuantity(int attendedQuantity) {
+    public boolean attendedQuantity(int attendedQuantity, OriginType originType, String originNumber) {
         if (!attended) {
             if (attendedQuantity <= branchProduct.getQuantity() && attendedQuantity > 0 && attendedQuantity <= requestedQuantity) {
                 this.attendedQuantity = attendedQuantity;
-                boolean attended = branchProduct.removeQuantity(attendedQuantity);
-               if (attended){
-                   this.attended = true;
-               }
+                boolean attended = branchProduct.removeQuantity(attendedQuantity, originType, originNumber);
+                if (attended) {
+                    this.attended = true;
+                }
                 return attended;
             }
         }
@@ -38,13 +38,13 @@ public class ProductRequest {
         return true;
     }
 
-    public boolean reversal() {
+    public boolean reversal(OriginType originType, String originNumber) {
         if (reversed) {
             return false;
         } else if (attendedQuantity <= 0) {
             return false;
         }
-        boolean result = this.getBranchProduct().removeQuantityReversal(this.attendedQuantity);
+        boolean result = this.getBranchProduct().removeQuantityReversal(this.attendedQuantity, originType, originNumber);
         if (result) {
             this.reversed = true;
             return result;

@@ -30,16 +30,16 @@ public class Main {
         branchSouth.addProduct(product2);
         branchSouth.addProduct(product3);
 
-        branchSouth.productReceipt(newProduct, 20);
-        branchSouth.productReceipt(newProduct4, -30);
+        //branchSouth.productReceipt(newProduct, 20);
+        //branchSouth.productReceipt(newProduct4, -30);
 
         BranchProduct newP = new BranchProduct();
         newP = branchSouth.findBranchProduct("1");
         System.out.println(newP.getProduct().getCode() + ": " + newP.getProduct().getDescription() + " - " + newP.getQuantity());
 
-        newP.addQuantity(220);
+        // newP.addQuantity(220,);
         System.out.println(newP.getProduct().getCode() + ": " + newP.getProduct().getDescription() + " - " + newP.getQuantity());
-        newP.removeQuantity(20);
+        //newP.removeQuantity(20);
         System.out.println(newP.getProduct().getCode() + ": " + newP.getProduct().getDescription() + " - " + newP.getQuantity());
         List<Movement> list = newP.getMovementList();
 
@@ -88,9 +88,6 @@ public class Main {
         System.out.println(out);
 
 
-
-
-
         Invoice invoice1 = new Invoice("123", branchSouth);
         invoice1.addProductInvoice(newProduct, 1000, Destination.STOCK);
         invoice1.addProductInvoice(newProduct2, 1000, Destination.STOCK);
@@ -102,6 +99,18 @@ public class Main {
         System.out.println("Saldo final: " + product2.getQuantity());
         System.out.println("Saldo final: " + product3.getQuantity());
 
+        String movement = "";
+
+        for (int i = 0; i < branchSouth.getProducts().size(); i++) {
+            for (int j = 0; j < branchSouth.getProducts().get(i).getMovementList().size(); j++) {
+                movement += "Tipo: " + branchSouth.getProducts().get(i).getMovementList().get(j).getMovementType() + "\nQuantidade: " +
+                        branchSouth.getProducts().get(i).getMovementList().get(j).getQuantity() +
+                        "\nData: " + branchSouth.getProducts().get(i).getMovementList().get(j).getDate() + "\nOrigin Type: " +
+                        branchSouth.getProducts().get(i).getMovementList().get(j).getOriginType() + "\nOrigin Number: " +
+                        branchSouth.getProducts().get(i).getMovementList().get(j).getOriginNumber() + "\n\n";
+            }
+        }
+        System.out.println(movement);
     }
 
 

@@ -36,7 +36,7 @@ public class Request {
     public boolean attendedProduct(String code, int attendedQuantity) {
         ProductRequest findProductRequest = findProductRequest(code);
         if (findProductRequest != null) {
-           boolean result = findProductRequest.attendedQuantity(attendedQuantity);
+            boolean result = findProductRequest.attendedQuantity(attendedQuantity, OriginType.REQUEST, numberRequest);
             return result;
         }
         return false;
@@ -45,8 +45,8 @@ public class Request {
     public boolean reversalProduct(String code) {
         ProductRequest findProductRequest = findProductRequest(code);
         if (findProductRequest != null) {
-           boolean result = findProductRequest.reversal();
-        return result;
+            boolean result = findProductRequest.reversal(OriginType.REQUEST, numberRequest);
+            return result;
         }
         return false;
     }
