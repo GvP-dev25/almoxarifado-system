@@ -15,7 +15,7 @@ public class Main {
 
         Product newProduct2 = new Product("2", "Parafuso 1/2 x 2");
 
-        Product newProdcut3 = new Product("3", "Parafuso 1/2 x 3");
+        Product newproduct3 = new Product("3", "Parafuso 1/2 x 3");
 
         Product newProduct4 = new Product("4", "Parafuso 1/2 x 4");
 
@@ -23,7 +23,7 @@ public class Main {
 
         BranchProduct product1 = new BranchProduct(newProduct, branchSouth, 10);
         BranchProduct product2 = new BranchProduct(newProduct2, branchSouth, 60);
-        BranchProduct product3 = new BranchProduct(newProdcut3, branchSouth, 200);
+        BranchProduct product3 = new BranchProduct(newproduct3, branchSouth, 200);
         BranchProduct product4 = new BranchProduct(newProduct4, branchSouth, 60);
 
         branchSouth.addProduct(product1);
@@ -88,20 +88,19 @@ public class Main {
         System.out.println(out);
 
 
-        request.reversalProduct("1");
 
+
+
+        Invoice invoice1 = new Invoice("123", branchSouth);
+        invoice1.addProductInvoice(newProduct, 1000, Destination.STOCK);
+        invoice1.addProductInvoice(newProduct2, 1000, Destination.STOCK);
+        invoice1.addProductInvoice(newproduct3, 1000, Destination.DIRECT);
+        invoice1.processInvoice();
+        invoice1.processInvoice();
 
         System.out.println("Saldo final: " + newP.getQuantity());
-        boolean result = request.reversalProduct("1");
-
-        System.out.println(result);
-
-        boolean falso = request.reversalProduct("4");
-
-        System.out.println("Saldo final: " + product4.getQuantity());
-        System.out.println(falso);
-        boolean test2 = request.reversalProduct("1");
-        System.out.println(test2);
+        System.out.println("Saldo final: " + product2.getQuantity());
+        System.out.println("Saldo final: " + product3.getQuantity());
 
     }
 
