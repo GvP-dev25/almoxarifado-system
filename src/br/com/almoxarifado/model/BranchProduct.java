@@ -1,9 +1,6 @@
 package br.com.almoxarifado.model;
 
-import br.com.almoxarifado.exception.CodeNotFoundException;
-import br.com.almoxarifado.exception.InsufficientStockException;
-import br.com.almoxarifado.exception.InvalidQuantityException;
-import br.com.almoxarifado.exception.ProductReversalProcessedException;
+import br.com.almoxarifado.exception.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,6 +52,7 @@ public class BranchProduct {
         if (quantity <= 0) {
             throw new InvalidQuantityException();
         }
+        findProductReversal(originType, originNumber);
         for (int i = 0; i < movementList.size(); i++) {
             if (movementList.get(i).getMovementType() == MovementType.ENTRY) {
                 if (movementList.get(i).getOriginType() == originType && movementList.get(i).getOriginNumber().equals(originNumber)) {
@@ -70,17 +68,21 @@ public class BranchProduct {
                     return;
                 }
             }
+        }
+
+        throw new MovementNotFoundException();
+    }
+
+    public void findProductReversal(OriginType originType, String originNumber) {
+        for (int i = 0; i < movementList.size(); i++) {
             if (movementList.get(i).getMovementType() == MovementType.REVERSAL && movementList.get(i).getOriginType()
                     == originType && movementList.get(i).getOriginNumber().equals(originNumber)) {
                 throw new ProductReversalProcessedException();
             }
         }
+
     }
 
-    // public boolean reverseEntry(UUID id){
-
-
-    //}
 
     private void registerMovement(int quantity, MovementType type, OriginType originType, String originNumber) {
         Movement movement = new Movement(quantity, type, originType, originNumber);

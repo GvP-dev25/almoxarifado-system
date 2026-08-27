@@ -1,7 +1,6 @@
 package br.com.almoxarifado.model;
 
-import br.com.almoxarifado.exception.InvalidQuantityException;
-import br.com.almoxarifado.exception.InsufficientStockException;
+import br.com.almoxarifado.exception.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -117,12 +116,26 @@ public class BranchProductTest {
         Branch branchSouth = new Branch("001", "Branch South");
         BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
         branchProduct.removeQuantity(100, OriginType.REQUEST, "123");
-        branchProduct.removeQuantityReversal(100,OriginType.REQUEST,"123");
+        branchProduct.removeQuantityReversal(100, OriginType.REQUEST, "123");
         assertEquals(100, branchProduct.getQuantity());
+        assertThrows(MovementNotFoundException.class, () ->
+                branchProduct.removeQuantityReversal(500, OriginType.REQUEST, "999"));
         assertEquals(OriginType.REQUEST, branchProduct.getMovementList().get(2).getOriginType());
         assertEquals("123", branchProduct.getMovementList().get(2).getOriginNumber());
         assertEquals(MovementType.REVERSAL, branchProduct.getMovementList().get(2).getMovementType());
         assertEquals(100, branchProduct.getMovementList().get(2).getQuantity());
+
+    }
+
+    @Test
+    void reversalAlreadyProcessed() {
+        Product newProduct = new Product("1", "Parafuso 1/2 x 1");
+        Branch branchSouth = new Branch("001", "Branch South");
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        branchProduct.addQuantity(100, OriginType.REQUEST, "123");
+        branchProduct.removeQuantityReversal(100, OriginType.REQUEST, "123");
+        assertThrows(ProductReversalProcessedException.class, () ->
+                branchProduct.removeQuantityReversal(100, OriginType.REQUEST, "123"));
     }
 
 
