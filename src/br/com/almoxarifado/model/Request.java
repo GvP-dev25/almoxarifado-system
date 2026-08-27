@@ -10,7 +10,6 @@ import java.util.List;
 public class Request {
     private String numberRequest;
     private Branch branch;
-    private ProductRequest productRequest;
     private List<ProductRequest> productRequestList;
     private List<ProductRequest> productRequestView;
 
