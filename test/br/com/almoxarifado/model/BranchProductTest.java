@@ -44,6 +44,8 @@ public class BranchProductTest {
         BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
         branchProduct.removeQuantity(70, OriginType.INITIALSTOCK, "123");
         assertEquals(30, branchProduct.getQuantity());
+        assertThrows(InvalidQuantityException.class, () ->
+                branchProduct.removeQuantity(-50, OriginType.REQUEST, "123"));
     }
 
     @Test
@@ -54,6 +56,8 @@ public class BranchProductTest {
         assertThrows(InvalidQuantityException.class, () -> {
             branchProduct.removeQuantity(0, OriginType.INITIALSTOCK, "123");
         });
+        branchProduct.removeQuantity(100, OriginType.INITIALSTOCK, "123");
+        assertEquals(0, branchProduct.getQuantity());
     }
 
     @Test
@@ -133,6 +137,8 @@ public class BranchProductTest {
         Branch branchSouth = new Branch("001", "Branch South");
         BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
         branchProduct.addQuantity(100, OriginType.REQUEST, "123");
+        assertThrows(InvalidQuantityException.class, () ->
+                branchProduct.removeQuantityReversal(0, OriginType.REQUEST, "123"));
         branchProduct.removeQuantityReversal(100, OriginType.REQUEST, "123");
         assertThrows(ProductReversalProcessedException.class, () ->
                 branchProduct.removeQuantityReversal(100, OriginType.REQUEST, "123"));

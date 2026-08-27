@@ -39,7 +39,7 @@ public class BranchProduct {
     }
 
     public void removeQuantity(int quantity, OriginType originType, String originNumber) {
-        if (quantity <= 0) {
+        if (quantity < 0) {
             throw new InvalidQuantityException();
         } else if (this.quantity < quantity) {
             throw new InsufficientStockException("Insufficient Stock. Available: " + this.quantity + ", requested: " + quantity);

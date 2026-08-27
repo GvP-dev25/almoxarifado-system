@@ -1,15 +1,12 @@
 package br.com.almoxarifado.model;
 
-import br.com.almoxarifado.exception.InvalidQuantityException;
-import br.com.almoxarifado.exception.ProductRequestAlreadyRevertedException;
-import br.com.almoxarifado.exception.ProductRequestFulFilledException;
-import br.com.almoxarifado.exception.RequestedQuantityExceededException;
+import br.com.almoxarifado.exception.*;
 
 public class ProductRequest {
     private BranchProduct branchProduct;
     private int requestedQuantity;
     private int attendedQuantity;
-    private boolean reversed, attended;
+    private boolean reversed, processed;
 
 
     public ProductRequest(BranchProduct branchProduct, int requestedQuantity) {
@@ -17,15 +14,15 @@ public class ProductRequest {
         this.requestedQuantity = requestedQuantity;
         attendedQuantity = 0;
         reversed = false;
-        attended = false;
+        processed = false;
     }
 
 
     public void attendedQuantity(int attendedQuantity, OriginType originType, String originNumber) {
-        if (attended) {
+        if (processed) {
             throw new ProductRequestFulFilledException();
         }
-        if (attendedQuantity <= 0) {
+        if (attendedQuantity < 0) {
             throw new InvalidQuantityException();
         }
         if (attendedQuantity > requestedQuantity) {
@@ -33,7 +30,7 @@ public class ProductRequest {
         }
         branchProduct.removeQuantity(attendedQuantity, originType, originNumber);
         this.attendedQuantity = attendedQuantity;
-        this.attended = true;
+        this.processed = true;
 
     }
 
@@ -48,8 +45,12 @@ public class ProductRequest {
     public void reversal(OriginType originType, String originNumber) {
         if (reversed) {
             throw new ProductRequestAlreadyRevertedException();
-        } else if (attendedQuantity <= 0) {
+        }
+        if (attendedQuantity < 0) {
             throw new InvalidQuantityException();
+        }
+        if (!reversed && attendedQuantity == 0) {
+            throw new NoReversionException();
         }
         this.getBranchProduct().removeQuantityReversal(this.attendedQuantity, originType, originNumber);
         this.reversed = true;
@@ -57,6 +58,14 @@ public class ProductRequest {
 
     public BranchProduct getBranchProduct() {
         return branchProduct;
+    }
+
+    public boolean isReversed() {
+        return reversed;
+    }
+
+    public boolean isProcessed() {
+        return processed;
     }
 
     public int getRequestedQuantity() {
