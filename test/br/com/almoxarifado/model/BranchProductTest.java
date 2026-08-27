@@ -88,6 +88,42 @@ public class BranchProductTest {
         assertEquals("123", branchProduct.getMovementList().get(1).getOriginNumber());
     }
 
+    @Test
+    void removeQuantityMoviments() {
+        Product newProduct = new Product("1", "Parafuso 1/2 x 1");
+        Branch branchSouth = new Branch("001", "Branch South");
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        branchProduct.removeQuantity(50, OriginType.REQUEST, "123");
+        assertEquals(OriginType.REQUEST, branchProduct.getMovementList().get(1).getOriginType());
+        assertEquals("123", branchProduct.getMovementList().get(1).getOriginNumber());
+        assertEquals(MovementType.OUTPUT, branchProduct.getMovementList().get(1).getMovementType());
+        assertEquals(50, branchProduct.getMovementList().get(1).getQuantity());
+    }
+
+    @Test
+    void reversalQuantityNegative() {
+        Product newProduct = new Product("1", "Parafuso 1/2 x 1");
+        Branch branchSouth = new Branch("001", "Branch South");
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        branchProduct.addQuantity(100, OriginType.INITIALSTOCK, "123");
+        assertThrows(InvalidQuantityException.class, () -> {
+            branchProduct.removeQuantityReversal(-10, OriginType.REQUEST, "123");
+        });
+    }
+
+    @Test
+    void reversalQuantityRequest() {
+        Product newProduct = new Product("1", "Parafuso 1/2 x 1");
+        Branch branchSouth = new Branch("001", "Branch South");
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        branchProduct.removeQuantity(100, OriginType.REQUEST, "123");
+        branchProduct.removeQuantityReversal(100,OriginType.REQUEST,"123");
+        assertEquals(100, branchProduct.getQuantity());
+        assertEquals(OriginType.REQUEST, branchProduct.getMovementList().get(2).getOriginType());
+        assertEquals("123", branchProduct.getMovementList().get(2).getOriginNumber());
+        assertEquals(MovementType.REVERSAL, branchProduct.getMovementList().get(2).getMovementType());
+        assertEquals(100, branchProduct.getMovementList().get(2).getQuantity());
+    }
 
 
 }

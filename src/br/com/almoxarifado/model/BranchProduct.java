@@ -1,7 +1,9 @@
 package br.com.almoxarifado.model;
 
+import br.com.almoxarifado.exception.CodeNotFoundException;
 import br.com.almoxarifado.exception.InsufficientStockException;
 import br.com.almoxarifado.exception.InvalidQuantityException;
+import br.com.almoxarifado.exception.ProductReversalProcessedException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,8 +55,26 @@ public class BranchProduct {
         if (quantity <= 0) {
             throw new InvalidQuantityException();
         }
-        this.quantity += quantity;
-        registerMovement(quantity, MovementType.REVERSAL, originType, originNumber);
+        for (int i = 0; i < movementList.size(); i++) {
+            if (movementList.get(i).getMovementType() == MovementType.ENTRY) {
+                if (movementList.get(i).getOriginType() == originType && movementList.get(i).getOriginNumber().equals(originNumber)) {
+                    this.quantity -= quantity;
+                    registerMovement(quantity, MovementType.REVERSAL, originType, originNumber);
+                    return;
+                }
+            }
+            if (movementList.get(i).getMovementType() == MovementType.OUTPUT) {
+                if (movementList.get(i).getOriginType() == originType && movementList.get(i).getOriginNumber().equals(originNumber)) {
+                    this.quantity += quantity;
+                    registerMovement(quantity, MovementType.REVERSAL, originType, originNumber);
+                    return;
+                }
+            }
+            if (movementList.get(i).getMovementType() == MovementType.REVERSAL && movementList.get(i).getOriginType()
+                    == originType && movementList.get(i).getOriginNumber().equals(originNumber)) {
+                throw new ProductReversalProcessedException();
+            }
+        }
     }
 
     // public boolean reverseEntry(UUID id){
