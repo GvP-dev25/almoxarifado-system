@@ -16,6 +16,14 @@ public class Invoice {
     private List<ProductInvoice> productInvoiceList;
     private List<ProductInvoice> productInvoiceView;
 
+    public boolean isProcessed() {
+        return processed;
+    }
+
+    public Branch getBranchDestination() {
+        return branchDestination;
+    }
+
     public Invoice(String numberInvoice, Branch branchDestination) {
         this.numberInvoice = numberInvoice;
         this.branchDestination = branchDestination;
@@ -62,7 +70,7 @@ public class Invoice {
     }
 
 
-    public List<ProductInvoice> getProductInvoicView() {
+    public List<ProductInvoice> getProductInvoiceView() {
         return productInvoiceView;
     }
 }
