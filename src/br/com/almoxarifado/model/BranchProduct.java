@@ -8,7 +8,7 @@ import java.util.List;
 
 public class BranchProduct {
     private Product product;
-    private Branch filial;
+    private Branch branch;
     private int quantity;
     private String location;
     private List<Movement> movementList;
@@ -17,16 +17,17 @@ public class BranchProduct {
     public BranchProduct() {
     }
 
-    public BranchProduct(Product product, Branch filial, int quantity) {
+    public BranchProduct(Product product, Branch branch, int quantity, OriginType originType, String originNumber) {
+        if (quantity <= 0) {
+            throw new InvalidQuantityException();
+        }
         this.product = product;
-        this.filial = filial;
+        this.branch = branch;
         this.quantity = quantity;
         this.location = null;
         movementList = new ArrayList<>();
         movementView = Collections.unmodifiableList(movementList);
-        if (quantity > 0) {
-            registerMovement(quantity, MovementType.ENTRY, OriginType.INITIALSTOCK, "01");
-        }
+        registerMovement(quantity, MovementType.ENTRY, originType, originNumber);
     }
 
 
@@ -39,7 +40,7 @@ public class BranchProduct {
     }
 
     public void removeQuantity(int quantity, OriginType originType, String originNumber) {
-        if (quantity < 0) {
+        if (quantity <= 0) {
             throw new InvalidQuantityException();
         } else if (this.quantity < quantity) {
             throw new InsufficientStockException("Insufficient Stock. Available: " + this.quantity + ", requested: " + quantity);
@@ -48,7 +49,7 @@ public class BranchProduct {
         registerMovement(quantity, MovementType.OUTPUT, originType, originNumber);
     }
 
-    public void removeQuantityReversal(int quantity, OriginType originType, String originNumber) {
+    public void processReversal(int quantity, OriginType originType, String originNumber) {
         if (quantity <= 0) {
             throw new InvalidQuantityException();
         }
@@ -100,7 +101,7 @@ public class BranchProduct {
     }
 
     public Branch getBranch() {
-        return filial;
+        return branch;
     }
 
     public int getQuantity() {

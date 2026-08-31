@@ -22,7 +22,7 @@ public class RequestTest {
     void addProductRequest() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
         Request request = new Request("155", branchSouth);
         request.addProductRequest(branchProduct, 100);
         assertEquals(1, request.getProductRequestList().size());
@@ -34,7 +34,7 @@ public class RequestTest {
     void addRepeatProduct() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
         Request request = new Request("155", branchSouth);
         request.addProductRequest(branchProduct, 100);
         request.addProductRequest(branchProduct, 50);
@@ -47,7 +47,7 @@ public class RequestTest {
     void addQuantityZero() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
         Request request = new Request("155", branchSouth);
         assertThrows(InvalidQuantityException.class, () ->
                 request.addProductRequest(branchProduct, 0));
@@ -59,7 +59,7 @@ public class RequestTest {
     void addInvalidQuantity() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
         Request request = new Request("155", branchSouth);
         assertThrows(InvalidQuantityException.class, () ->
                 request.addProductRequest(branchProduct, -50));
@@ -71,8 +71,8 @@ public class RequestTest {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Product newProduct2 = new Product("2", "Parafuso 1/2 x 2");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
-        BranchProduct branchProduct2 = new BranchProduct(newProduct2, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
+        BranchProduct branchProduct2 = new BranchProduct(newProduct2, branchSouth, 100, OriginType.INVOICE, "1234");
         Request request = new Request("155", branchSouth);
         request.addProductRequest(branchProduct, 100);
         request.addProductRequest(branchProduct2, 100);
@@ -84,7 +84,7 @@ public class RequestTest {
     void attendedProductRequest() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
         Request request = new Request("155", branchSouth);
         request.addProductRequest(branchProduct, 80);
         request.attendedProduct("1", 50);
@@ -99,7 +99,7 @@ public class RequestTest {
     void codeNotFound() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
         Request request = new Request("155", branchSouth);
         request.addProductRequest(branchProduct, 80);
         assertThrows(CodeNotFoundException.class, () ->
@@ -113,7 +113,7 @@ public class RequestTest {
     void reversalProductRequest() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
         Request request = new Request("155", branchSouth);
         request.addProductRequest(branchProduct, 80);
         request.attendedProduct("1", 50);
@@ -129,7 +129,7 @@ public class RequestTest {
     void reversalProductRequestCodeNotFound() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
         Request request = new Request("155", branchSouth);
         request.addProductRequest(branchProduct, 80);
         request.attendedProduct("1", 50);

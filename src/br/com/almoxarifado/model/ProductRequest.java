@@ -52,7 +52,7 @@ public class ProductRequest {
         if (!reversed && attendedQuantity == 0) {
             throw new NoReversionException();
         }
-        this.getBranchProduct().removeQuantityReversal(this.attendedQuantity, originType, originNumber);
+        this.getBranchProduct().processReversal(this.attendedQuantity, originType, originNumber);
         this.reversed = true;
     }
 

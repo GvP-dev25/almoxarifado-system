@@ -80,7 +80,7 @@ public class InvoiceTest {
     void processInvoiceWithRepeatedProduct() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
         branchSouth.addProduct(branchProduct);
         Invoice invoice = new Invoice("123", branchSouth);
         assertEquals(1, branchProduct.getMovementList().size());
@@ -102,7 +102,7 @@ public class InvoiceTest {
     void processInvoiceException() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
         branchSouth.addProduct(branchProduct);
         Invoice invoice = new Invoice("123", branchSouth);
         assertEquals(1, branchProduct.getMovementList().size());

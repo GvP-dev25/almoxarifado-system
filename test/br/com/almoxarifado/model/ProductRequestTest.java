@@ -11,7 +11,7 @@ public class ProductRequestTest {
     void creatRequest() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
         ProductRequest productRequest = new ProductRequest(branchProduct, 100);
         Request request = new Request("155", branchSouth);
         request.addProductRequest(branchProduct, 100);
@@ -26,7 +26,7 @@ public class ProductRequestTest {
     void attendRequest() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
         ProductRequest productRequest = new ProductRequest(branchProduct, 80);
         Request request = new Request("155", branchSouth);
         request.addProductRequest(branchProduct, 100);
@@ -41,7 +41,7 @@ public class ProductRequestTest {
     void addQuantityZero() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
         ProductRequest productRequest = new ProductRequest(branchProduct, 80);
         Request request = new Request("155", branchSouth);
         request.addProductRequest(branchProduct, 100);
@@ -56,7 +56,7 @@ public class ProductRequestTest {
     void addQuantitySmall() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
         ProductRequest productRequest = new ProductRequest(branchProduct, 80);
         Request request = new Request("155", branchSouth);
         assertThrows(InvalidQuantityException.class, () ->
@@ -70,7 +70,7 @@ public class ProductRequestTest {
     void addQuantityLarger() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
         ProductRequest productRequest = new ProductRequest(branchProduct, 80);
         Request request = new Request("155", branchSouth);
         assertThrows(RequestedQuantityExceededException.class, () ->
@@ -84,7 +84,7 @@ public class ProductRequestTest {
     void fulfillQuantityDuplicate() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
         ProductRequest productRequest = new ProductRequest(branchProduct, 80);
         Request request = new Request("155", branchSouth);
         productRequest.attendedQuantity(50, OriginType.REQUEST, "155");
@@ -99,7 +99,7 @@ public class ProductRequestTest {
     void reversal() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
         ProductRequest productRequest = new ProductRequest(branchProduct, 80);
         Request request = new Request("155", branchSouth);
         productRequest.attendedQuantity(50, OriginType.REQUEST, "155");
@@ -114,7 +114,7 @@ public class ProductRequestTest {
     void reversalMovementNotFound() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
         ProductRequest productRequest = new ProductRequest(branchProduct, 80);
         Request request = new Request("155", branchSouth);
         productRequest.attendedQuantity(50, OriginType.REQUEST, "155");
@@ -126,7 +126,7 @@ public class ProductRequestTest {
     void reversalDuplicated() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
         ProductRequest productRequest = new ProductRequest(branchProduct, 80);
         Request request = new Request("155", branchSouth);
         productRequest.attendedQuantity(50, OriginType.REQUEST, "155");
@@ -139,7 +139,7 @@ public class ProductRequestTest {
     void reversalZero() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
         ProductRequest productRequest = new ProductRequest(branchProduct, 80);
         Request request = new Request("155", branchSouth);
         productRequest.attendedQuantity(0, OriginType.REQUEST, "155");
@@ -151,7 +151,7 @@ public class ProductRequestTest {
     void reversalNotAttended() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
         ProductRequest productRequest = new ProductRequest(branchProduct, 80);
         Request request = new Request("155", branchSouth);
         assertThrows(NoReversionException.class, () ->

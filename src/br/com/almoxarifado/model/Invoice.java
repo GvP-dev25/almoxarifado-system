@@ -52,7 +52,8 @@ public class Invoice {
                 if (branchProduct != null) {
                     branchProduct.addQuantity(productInvoiceList.get(i).getQuantity(), OriginType.INVOICE, numberInvoice);
                 } else {
-                    BranchProduct newBranchProduct = new BranchProduct(productInvoiceList.get(i).getProduct(), branchDestination, productInvoiceList.get(i).getQuantity());
+                    BranchProduct newBranchProduct = new BranchProduct(productInvoiceList.get(i).getProduct(),
+                            branchDestination, productInvoiceList.get(i).getQuantity(), OriginType.INVOICE, this.numberInvoice);
                     branchDestination.addProduct(newBranchProduct);
                 }
             }

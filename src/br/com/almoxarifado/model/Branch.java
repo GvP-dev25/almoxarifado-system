@@ -36,6 +36,8 @@ public class Branch {
         return false;
     }
 
+
+
 /*   Methods commented out for future review. Their responsibilities changed after the creation of new classes.
 
     public boolean productReceipt(Product product, int quantity) {

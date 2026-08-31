@@ -11,8 +11,9 @@ public class BranchProductTest {
     void addQuantity() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
-        branchProduct.addQuantity(50, OriginType.INITIALSTOCK, "123");
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100,
+                OriginType.INVOICE, "001");
+        branchProduct.addQuantity(50, OriginType.INVOICE, "002");
         assertEquals(150, branchProduct.getQuantity());
     }
 
@@ -20,9 +21,9 @@ public class BranchProductTest {
     void addQuantityException() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "002");
         assertThrows(InvalidQuantityException.class, () -> {
-            branchProduct.addQuantity(0, OriginType.INITIALSTOCK, "123");
+            branchProduct.addQuantity(0, OriginType.INVOICE, "123");
         });
     }
 
@@ -30,9 +31,9 @@ public class BranchProductTest {
     void addQuantityNegative() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "122");
         assertThrows(InvalidQuantityException.class, () -> {
-            branchProduct.addQuantity(-50, OriginType.INITIALSTOCK, "123");
+            branchProduct.addQuantity(-50, OriginType.INVOICE, "123");
         });
     }
 
@@ -41,8 +42,8 @@ public class BranchProductTest {
     void removeQuantity() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
-        branchProduct.removeQuantity(70, OriginType.INITIALSTOCK, "123");
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "122");
+        branchProduct.removeQuantity(70, OriginType.REQUEST, "123");
         assertEquals(30, branchProduct.getQuantity());
         assertThrows(InvalidQuantityException.class, () ->
                 branchProduct.removeQuantity(-50, OriginType.REQUEST, "123"));
@@ -52,11 +53,11 @@ public class BranchProductTest {
     void removeZeroQuantity() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
         assertThrows(InvalidQuantityException.class, () -> {
-            branchProduct.removeQuantity(0, OriginType.INITIALSTOCK, "123");
+            branchProduct.removeQuantity(0, OriginType.REQUEST, "123");
         });
-        branchProduct.removeQuantity(100, OriginType.INITIALSTOCK, "123");
+        branchProduct.removeQuantity(100, OriginType.REQUEST, "123");
         assertEquals(0, branchProduct.getQuantity());
     }
 
@@ -64,9 +65,9 @@ public class BranchProductTest {
     void removeQuantityExceedsStock() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
         assertThrows(InsufficientStockException.class, () -> {
-            branchProduct.removeQuantity(150, OriginType.INITIALSTOCK, "123");
+            branchProduct.removeQuantity(150, OriginType.REQUEST, "123");
         });
     }
 
@@ -74,8 +75,9 @@ public class BranchProductTest {
     void movementListSize() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
-        branchProduct.addQuantity(50, OriginType.INITIALSTOCK, "123");
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth,
+                100, OriginType.INVOICE, "1234");
+        branchProduct.addQuantity(50, OriginType.INVOICE, "123");
         assertEquals(2, branchProduct.getMovementList().size());
         assertEquals(100, branchProduct.getMovementList().get(0).getQuantity());
         assertEquals(50, branchProduct.getMovementList().get(1).getQuantity());
@@ -85,9 +87,9 @@ public class BranchProductTest {
     void movimentsResults() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
-        branchProduct.addQuantity(50, OriginType.INITIALSTOCK, "123");
-        assertEquals(OriginType.INITIALSTOCK, branchProduct.getMovementList().get(1).getOriginType());
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
+        branchProduct.addQuantity(50, OriginType.INVOICE, "123");
+        assertEquals(OriginType.INVOICE, branchProduct.getMovementList().get(1).getOriginType());
         assertEquals("123", branchProduct.getMovementList().get(1).getOriginNumber());
     }
 
@@ -95,7 +97,7 @@ public class BranchProductTest {
     void removeQuantityMoviments() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
         branchProduct.removeQuantity(50, OriginType.REQUEST, "123");
         assertEquals(OriginType.REQUEST, branchProduct.getMovementList().get(1).getOriginType());
         assertEquals("123", branchProduct.getMovementList().get(1).getOriginNumber());
@@ -107,10 +109,10 @@ public class BranchProductTest {
     void reversalQuantityNegative() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
-        branchProduct.addQuantity(100, OriginType.INITIALSTOCK, "123");
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
+        branchProduct.addQuantity(100, OriginType.INVOICE, "123");
         assertThrows(InvalidQuantityException.class, () -> {
-            branchProduct.removeQuantityReversal(-10, OriginType.REQUEST, "123");
+            branchProduct.processReversal(-10, OriginType.REQUEST, "123");
         });
     }
 
@@ -118,12 +120,12 @@ public class BranchProductTest {
     void reversalQuantityRequest() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
         branchProduct.removeQuantity(100, OriginType.REQUEST, "123");
-        branchProduct.removeQuantityReversal(100, OriginType.REQUEST, "123");
+        branchProduct.processReversal(100, OriginType.REQUEST, "123");
         assertEquals(100, branchProduct.getQuantity());
         assertThrows(MovementNotFoundException.class, () ->
-                branchProduct.removeQuantityReversal(500, OriginType.REQUEST, "999"));
+                branchProduct.processReversal(500, OriginType.REQUEST, "999"));
         assertEquals(OriginType.REQUEST, branchProduct.getMovementList().get(2).getOriginType());
         assertEquals("123", branchProduct.getMovementList().get(2).getOriginNumber());
         assertEquals(MovementType.REVERSAL, branchProduct.getMovementList().get(2).getMovementType());
@@ -135,16 +137,22 @@ public class BranchProductTest {
     void reversalAlreadyProcessed() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100);
-        branchProduct.addQuantity(100, OriginType.REQUEST, "123");
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
+        branchProduct.addQuantity(100, OriginType.INVOICE, "123");
         assertThrows(InvalidQuantityException.class, () ->
-                branchProduct.removeQuantityReversal(0, OriginType.REQUEST, "123"));
-        branchProduct.removeQuantityReversal(100, OriginType.REQUEST, "123");
+                branchProduct.processReversal(0, OriginType.INVOICE, "123"));
+        branchProduct.processReversal(100, OriginType.INVOICE, "123");
         assertThrows(ProductReversalProcessedException.class, () ->
-                branchProduct.removeQuantityReversal(100, OriginType.REQUEST, "123"));
+                branchProduct.processReversal(100, OriginType.INVOICE, "123"));
     }
 
-
+    @Test
+    void createBranchProductWithZeroQuantity() {
+        Product newProduct = new Product("1", "Parafuso 1/2 x 1");
+        Branch branchSouth = new Branch("001", "Branch South");
+        assertThrows(InvalidQuantityException.class, () ->
+                new BranchProduct(newProduct, branchSouth, -10, OriginType.INVOICE, "1234"));
+    }
 
 
 }
