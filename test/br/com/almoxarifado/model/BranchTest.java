@@ -24,6 +24,7 @@ public class BranchTest {
         assertEquals(branchProduct, branchSouth.findBranchProduct("1"));
         assertEquals(1, branchSouth.getProducts().size());
     }
+
     @Test
     void findProductNotFound() {
         Branch branchSouth = new Branch("001", "Branch South");
@@ -50,11 +51,41 @@ public class BranchTest {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
         branchSouth.addProduct(branchProduct);
-        assertThrows(UnsupportedOperationException.class, ()->
+        assertThrows(UnsupportedOperationException.class, () ->
                 branchSouth.getProducts().clear());
         assertEquals(1, branchSouth.getProducts().size());
     }
 
+    @Test
+    void receiveProducts() {
+        Branch branchSouth = new Branch("001", "Branch South");
+        Product newProduct = new Product("1", "Parafuso 1/2 x 1");
+        assertEquals(0, branchSouth.getProducts().size());
+        branchSouth.receiveProduct(newProduct, 100, OriginType.INVOICE, "1234");
+        assertEquals(1, branchSouth.getProducts().size());
+        assertEquals(100, branchSouth.getProducts().get(0).getQuantity());
+        assertEquals(OriginType.INVOICE, branchSouth.getProducts().get(0).getMovementList().get(0).getOriginType());
+
+    }
+
+    @Test
+    void receiveExistingProduct() {
+        Branch branchSouth = new Branch("001", "Branch South");
+        Product newProduct = new Product("1", "Parafuso 1/2 x 1");
+        assertEquals(0, branchSouth.getProducts().size());
+        branchSouth.receiveProduct(newProduct, 100, OriginType.INVOICE, "1234");
+        assertEquals(1, branchSouth.getProducts().size());
+        assertEquals(100, branchSouth.getProducts().get(0).getQuantity());
+        assertEquals(OriginType.INVOICE, branchSouth.getProducts().get(0).getMovementList().get(0).getOriginType());
+        branchSouth.receiveProduct(newProduct,50,OriginType.INVOICE,"12345");
+        assertEquals(1, branchSouth.getProducts().size());
+        assertEquals(150, branchSouth.getProducts().get(0).getQuantity());
+        assertEquals(OriginType.INVOICE, branchSouth.getProducts().get(0).getMovementList().get(1).getOriginType());
+        assertEquals(50, branchSouth.getProducts().get(0).getMovementList().get(1).getQuantity());
+        assertEquals("12345", branchSouth.getProducts().get(0).getMovementList().get(1).getOriginNumber());
+
+
+    }
 
 
 }

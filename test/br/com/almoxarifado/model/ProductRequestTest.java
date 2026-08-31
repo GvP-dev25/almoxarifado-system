@@ -3,19 +3,18 @@ package br.com.almoxarifado.model;
 import br.com.almoxarifado.exception.*;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ProductRequestTest {
     @Test
     void creatRequest() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
-        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
-        ProductRequest productRequest = new ProductRequest(branchProduct, 100);
         Request request = new Request("155", branchSouth);
-        request.addProductRequest(branchProduct, 100);
-
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
+        branchSouth.addProduct(branchProduct);
+        request.addProductRequest(newProduct, 100);
+        ProductRequest productRequest = request.findProductRequest("1");
         assertEquals(100, productRequest.getRequestedQuantity());
         assertEquals(0, productRequest.getAttendedQuantity());
         assertEquals(false, productRequest.isProcessed());
@@ -27,10 +26,10 @@ public class ProductRequestTest {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
         BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
-        ProductRequest productRequest = new ProductRequest(branchProduct, 80);
-        Request request = new Request("155", branchSouth);
-        request.addProductRequest(branchProduct, 100);
-        productRequest.attendedQuantity(50, OriginType.REQUEST, "155");
+        branchSouth.addProduct(branchProduct);        Request request = new Request("155", branchSouth);
+        request.addProductRequest(newProduct, 100);
+        ProductRequest productRequest = request.findProductRequest("1");
+        productRequest.attendedQuantity(50);
         assertEquals(50, branchProduct.getQuantity());
         assertEquals(50, productRequest.getAttendedQuantity());
         assertEquals(true, productRequest.isProcessed());
@@ -42,10 +41,11 @@ public class ProductRequestTest {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
         BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
-        ProductRequest productRequest = new ProductRequest(branchProduct, 80);
+        branchSouth.addProduct(branchProduct);
         Request request = new Request("155", branchSouth);
-        request.addProductRequest(branchProduct, 100);
-        productRequest.attendedQuantity(0, OriginType.REQUEST, "155");
+        request.addProductRequest(newProduct, 100);
+        ProductRequest productRequest = request.findProductRequest("1");
+        productRequest.attendedQuantity(0);
         assertEquals(100, branchProduct.getQuantity());
         assertEquals(0, productRequest.getAttendedQuantity());
         assertEquals(true, productRequest.isProcessed());
@@ -53,43 +53,43 @@ public class ProductRequestTest {
     }
 
     @Test
-    void addQuantitySmall() {
+    void cannotAttendNegativeQuantity() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
         BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
-        ProductRequest productRequest = new ProductRequest(branchProduct, 80);
         Request request = new Request("155", branchSouth);
+        ProductRequest productRequest = new ProductRequest(request, branchProduct, 80);
         assertThrows(InvalidQuantityException.class, () ->
-                productRequest.attendedQuantity(-50, OriginType.REQUEST, "155"));
+                productRequest.attendedQuantity(-50));
         assertEquals(100, branchProduct.getQuantity());
         assertEquals(80, productRequest.getRequestedQuantity());
         assertEquals(false, productRequest.isProcessed());
     }
 
     @Test
-    void addQuantityLarger() {
+    void cannotExceedRequestedQuantity() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
         BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
-        ProductRequest productRequest = new ProductRequest(branchProduct, 80);
         Request request = new Request("155", branchSouth);
+        ProductRequest productRequest = new ProductRequest(request, branchProduct, 80);
         assertThrows(RequestedQuantityExceededException.class, () ->
-                productRequest.attendedQuantity(150, OriginType.REQUEST, "155"));
+                productRequest.attendedQuantity(150));
         assertEquals(100, branchProduct.getQuantity());
         assertEquals(0, productRequest.getAttendedQuantity());
         assertEquals(false, productRequest.isProcessed());
     }
 
     @Test
-    void fulfillQuantityDuplicate() {
+    void cannotAttendAlreadyProcessedRequest() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
         BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
-        ProductRequest productRequest = new ProductRequest(branchProduct, 80);
         Request request = new Request("155", branchSouth);
-        productRequest.attendedQuantity(50, OriginType.REQUEST, "155");
-        assertThrows(ProductRequestFulFilledException.class, () ->
-                productRequest.attendedQuantity(50, OriginType.REQUEST, "155"));
+        ProductRequest productRequest = new ProductRequest(request, branchProduct, 80);
+        productRequest.attendedQuantity(50);
+        assertThrows(ProductRequestAlreadyProcessedException.class, () ->
+                productRequest.attendedQuantity(50));
         assertEquals(50, branchProduct.getQuantity());
         assertEquals(50, productRequest.getAttendedQuantity());
         assertEquals(true, productRequest.isProcessed());
@@ -100,10 +100,10 @@ public class ProductRequestTest {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
         BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
-        ProductRequest productRequest = new ProductRequest(branchProduct, 80);
         Request request = new Request("155", branchSouth);
-        productRequest.attendedQuantity(50, OriginType.REQUEST, "155");
-        productRequest.reversal(OriginType.REQUEST, "155");
+        ProductRequest productRequest = new ProductRequest(request, branchProduct, 80);
+        productRequest.attendedQuantity(50);
+        productRequest.reversal();
         assertEquals(100, branchProduct.getQuantity());
         assertEquals(50, productRequest.getAttendedQuantity());
         assertEquals(true, productRequest.isProcessed());
@@ -115,11 +115,9 @@ public class ProductRequestTest {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
         BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
-        ProductRequest productRequest = new ProductRequest(branchProduct, 80);
         Request request = new Request("155", branchSouth);
-        productRequest.attendedQuantity(50, OriginType.REQUEST, "155");
-        assertThrows(MovementNotFoundException.class, () ->
-                productRequest.reversal(OriginType.REQUEST, "299"));
+        ProductRequest productRequest = new ProductRequest(request, branchProduct, 80);
+        productRequest.attendedQuantity(50);
     }
 
     @Test
@@ -127,12 +125,12 @@ public class ProductRequestTest {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
         BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
-        ProductRequest productRequest = new ProductRequest(branchProduct, 80);
         Request request = new Request("155", branchSouth);
-        productRequest.attendedQuantity(50, OriginType.REQUEST, "155");
-        productRequest.reversal(OriginType.REQUEST, "155");
+        ProductRequest productRequest = new ProductRequest(request, branchProduct, 80);
+        productRequest.attendedQuantity(50);
+        productRequest.reversal();
         assertThrows(ProductRequestAlreadyRevertedException.class, () ->
-                productRequest.reversal(OriginType.REQUEST, "155"));
+                productRequest.reversal());
     }
 
     @Test
@@ -140,23 +138,49 @@ public class ProductRequestTest {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
         BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
-        ProductRequest productRequest = new ProductRequest(branchProduct, 80);
         Request request = new Request("155", branchSouth);
-        productRequest.attendedQuantity(0, OriginType.REQUEST, "155");
+        ProductRequest productRequest = new ProductRequest(request, branchProduct, 80);
+        productRequest.attendedQuantity(0);
         assertThrows(NoReversionException.class, () ->
-                productRequest.reversal(OriginType.REQUEST, "155"));
+                productRequest.reversal());
 
     }
+
     @Test
     void reversalNotAttended() {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
         BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
-        ProductRequest productRequest = new ProductRequest(branchProduct, 80);
         Request request = new Request("155", branchSouth);
+        ProductRequest productRequest = new ProductRequest(request, branchProduct, 80);
         assertThrows(NoReversionException.class, () ->
-                productRequest.reversal(OriginType.REQUEST, "155"));
+                productRequest.reversal());
+    }
 
+    @Test
+    void cannotAddRequestedQuantityAfterProcessed() {
+        Product newProduct = new Product("1", "Parafuso 1/2 x 1");
+        Branch branchSouth = new Branch("001", "Branch South");
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
+        Request request = new Request("155", branchSouth);
+        ProductRequest productRequest = new ProductRequest(request, branchProduct, 80);
+        productRequest.attendedQuantity(50);
+        assertTrue(productRequest.isProcessed());
+        assertThrows(ProductRequestAlreadyProcessedException.class, () ->
+                productRequest.addRequestQuantity(200));
+        assertEquals(80, productRequest.getRequestedQuantity());
+    }
+
+    @Test
+    void cannotCreateProductRequestWithInvalidQuantity(){
+        Product newProduct = new Product("1", "Parafuso 1/2 x 1");
+        Branch branchSouth = new Branch("001", "Branch South");
+        BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
+        Request request = new Request("155", branchSouth);
+        assertThrows(InvalidQuantityException.class, () ->
+                new ProductRequest(request, branchProduct, 0));
+        assertThrows(InvalidQuantityException.class, () ->
+                new ProductRequest(request, branchProduct, -20));
     }
 
 

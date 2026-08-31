@@ -3,13 +3,18 @@ package br.com.almoxarifado.model;
 import br.com.almoxarifado.exception.*;
 
 public class ProductRequest {
+    private Request request;
     private BranchProduct branchProduct;
     private int requestedQuantity;
     private int attendedQuantity;
     private boolean reversed, processed;
 
 
-    public ProductRequest(BranchProduct branchProduct, int requestedQuantity) {
+    public ProductRequest(Request request ,BranchProduct branchProduct, int requestedQuantity) {
+        if(requestedQuantity <= 0){
+            throw new InvalidQuantityException();
+        }
+        this.request = request;
         this.branchProduct = branchProduct;
         this.requestedQuantity = requestedQuantity;
         attendedQuantity = 0;
@@ -18,9 +23,9 @@ public class ProductRequest {
     }
 
 
-    public void attendedQuantity(int attendedQuantity, OriginType originType, String originNumber) {
+    public void attendedQuantity(int attendedQuantity) {
         if (processed) {
-            throw new ProductRequestFulFilledException();
+            throw new ProductRequestAlreadyProcessedException();
         }
         if (attendedQuantity < 0) {
             throw new InvalidQuantityException();
@@ -28,7 +33,7 @@ public class ProductRequest {
         if (attendedQuantity > requestedQuantity) {
             throw new RequestedQuantityExceededException();
         }
-        branchProduct.removeQuantity(attendedQuantity, originType, originNumber);
+        branchProduct.removeQuantity(attendedQuantity, OriginType.REQUEST, request.getNumberRequest());
         this.attendedQuantity = attendedQuantity;
         this.processed = true;
 
@@ -36,23 +41,23 @@ public class ProductRequest {
 
 
     public void addRequestQuantity(int requestedQuantity) {
+        if (processed) {
+            throw new ProductRequestAlreadyProcessedException();
+        }
         if (requestedQuantity < 0) {
             throw new InvalidQuantityException();
         }
         this.requestedQuantity += requestedQuantity;
     }
 
-    public void reversal(OriginType originType, String originNumber) {
+    public void reversal() {
         if (reversed) {
             throw new ProductRequestAlreadyRevertedException();
-        }
-        if (attendedQuantity < 0) {
-            throw new InvalidQuantityException();
         }
         if (!reversed && attendedQuantity == 0) {
             throw new NoReversionException();
         }
-        this.getBranchProduct().processReversal(this.attendedQuantity, originType, originNumber);
+        this.getBranchProduct().processReversal(this.attendedQuantity, OriginType.REQUEST, request.getNumberRequest());
         this.reversed = true;
     }
 

@@ -36,6 +36,16 @@ public class Branch {
         return false;
     }
 
+    public void receiveProduct(Product product, int quantity, OriginType originType, String originNumber) {
+        BranchProduct branchProduct = findBranchProduct(product.getCode());
+        if (branchProduct != null) {
+            branchProduct.addQuantity(quantity, originType, originNumber);
+        } else {
+            BranchProduct newBranchProduct = new BranchProduct(product, this, quantity, originType, originNumber);
+            addProduct(newBranchProduct);
+        }
+    }
+
 
 
 /*   Methods commented out for future review. Their responsibilities changed after the creation of new classes.

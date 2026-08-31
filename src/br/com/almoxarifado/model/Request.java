@@ -1,65 +1,63 @@
 package br.com.almoxarifado.model;
 
-import br.com.almoxarifado.exception.CodeNotFoundException;
 import br.com.almoxarifado.exception.InvalidQuantityException;
+import br.com.almoxarifado.exception.ProductNotFoundInBranchException;
+import br.com.almoxarifado.exception.ProductNotFoundInRequestException;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Request {
     private String numberRequest;
     private Branch branch;
-    private List<ProductRequest> productRequestList;
-    private List<ProductRequest> productRequestView;
+    private Map<String, ProductRequest> productRequestMap;
+    private Map<String, ProductRequest> productRequestView;
 
 
     public Request(String numberRequest, Branch branch) {
         this.numberRequest = numberRequest;
         this.branch = branch;
-        productRequestList = new ArrayList<>();
-        productRequestView = Collections.unmodifiableList(productRequestList);
+        productRequestMap = new HashMap<>();
+        productRequestView = Collections.unmodifiableMap(productRequestMap);
     }
 
-    public void addProductRequest(BranchProduct product, int requestedQuantity) {
-        ProductRequest findProductRequest = findProductRequest(product.getProduct().getCode());
+    public void addProductRequest(Product product, int requestedQuantity) {
+        BranchProduct branchProduct = branch.findBranchProduct(product.getCode());
         if (requestedQuantity <= 0) {
             throw new InvalidQuantityException();
         }
+        if (branchProduct == null) {
+            throw new ProductNotFoundInBranchException();
+        }
+        ProductRequest findProductRequest = findProductRequest(product.getCode());
         if (findProductRequest != null) {
             findProductRequest.addRequestQuantity(requestedQuantity);
             return;
         }
-        ProductRequest newProductRequest = new ProductRequest(product, requestedQuantity);
-        productRequestList.add(newProductRequest);
+        ProductRequest newProductRequest = new ProductRequest(this, branchProduct, requestedQuantity);
+        productRequestMap.put(product.getCode(),newProductRequest);
     }
 
     public void attendedProduct(String code, int attendedQuantity) {
         ProductRequest findProductRequest = findProductRequest(code);
         if (findProductRequest != null) {
-            findProductRequest.attendedQuantity(attendedQuantity, OriginType.REQUEST, numberRequest);
+            findProductRequest.attendedQuantity(attendedQuantity);
             return;
         }
-        throw new CodeNotFoundException();
+        throw new ProductNotFoundInRequestException();
     }
 
     public void reversalProduct(String code) {
         ProductRequest findProductRequest = findProductRequest(code);
         if (findProductRequest != null) {
-            findProductRequest.reversal(OriginType.REQUEST, numberRequest);
+            findProductRequest.reversal();
             return;
         }
-        throw new CodeNotFoundException();
+        throw new ProductNotFoundInRequestException();
     }
 
-    public ProductRequest findProductRequest(String code) {
-        for (int i = 0; i < productRequestList.size(); i++) {
-            if (productRequestList.get(i).getBranchProduct().getProduct().getCode().equals(code)) {
-                return productRequestList.get(i);
-            }
-        }
-        return null;
-    }
+    public ProductRequest findProductRequest(String code) {return productRequestMap.get(code);}
 
 
     public String getNumberRequest() {
@@ -70,7 +68,7 @@ public class Request {
         return branch;
     }
 
-    public List<ProductRequest> getProductRequestList() {
+    public Map<String, ProductRequest> getProductRequestMap() {
         return productRequestView;
     }
 }

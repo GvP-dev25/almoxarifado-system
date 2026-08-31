@@ -54,9 +54,8 @@ public class BranchProductTest {
         Product newProduct = new Product("1", "Parafuso 1/2 x 1");
         Branch branchSouth = new Branch("001", "Branch South");
         BranchProduct branchProduct = new BranchProduct(newProduct, branchSouth, 100, OriginType.INVOICE, "1234");
-        assertThrows(InvalidQuantityException.class, () -> {
-            branchProduct.removeQuantity(0, OriginType.REQUEST, "123");
-        });
+        branchProduct.removeQuantity(0, OriginType.REQUEST, "123");
+        assertEquals(100, branchProduct.getQuantity());
         branchProduct.removeQuantity(100, OriginType.REQUEST, "123");
         assertEquals(0, branchProduct.getQuantity());
     }

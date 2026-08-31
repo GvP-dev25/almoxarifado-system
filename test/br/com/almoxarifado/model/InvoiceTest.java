@@ -62,7 +62,7 @@ public class InvoiceTest {
         assertNotNull(branchProduct);
         assertEquals(100, branchProduct.getQuantity());
         assertEquals(1, branchProduct.getMovementList().size());
-        assertEquals(OriginType.INITIALSTOCK, branchProduct.getMovementList().get(0).getOriginType());
+        assertEquals(OriginType.INVOICE, branchProduct.getMovementList().get(0).getOriginType());
     }
 
     @Test
