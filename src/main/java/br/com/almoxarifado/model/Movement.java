@@ -1,18 +1,30 @@
 package br.com.almoxarifado.model;
 
+import br.com.almoxarifado.exception.InvalidQuantityException;
+
 import java.util.UUID;
 import java.time.LocalDateTime;
 
 public class Movement {
-    private UUID uuid;
-    private MovementType movementType;
-    private LocalDateTime date;
-    private int quantity;
-    private String originNumber;
-    private OriginType originType;
+    final UUID uuid;
+    final MovementType movementType;
+    final LocalDateTime date;
+    final int quantity;
+    final String originNumber;
+    final OriginType originType;
 
 
     public Movement(int quantity, MovementType type, OriginType originType, String originNumber) {
+        if (quantity <= 0) {
+            throw new InvalidQuantityException();
+        }
+        if (type == null || originType == null || originNumber == null) {
+            throw new NullPointerException();
+        }
+        if (originNumber.isBlank()) {
+           throw new IllegalArgumentException();
+        }
+
         uuid = UUID.randomUUID();
         this.quantity = quantity;
         this.movementType = type;

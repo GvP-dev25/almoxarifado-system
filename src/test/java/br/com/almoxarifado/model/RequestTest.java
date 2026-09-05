@@ -1,9 +1,10 @@
 package br.com.almoxarifado.model;
 
-import br.com.almoxarifado.exception.InvalidQuantityException;
-import br.com.almoxarifado.exception.ProductNotFoundInBranchException;
-import br.com.almoxarifado.exception.ProductNotFoundInRequestException;
-import br.com.almoxarifado.exception.ProductRequestAlreadyProcessedException;
+import main.java.br.com.almoxarifado.exception.InvalidQuantityException;
+import main.java.br.com.almoxarifado.exception.ProductNotFoundInBranchException;
+import main.java.br.com.almoxarifado.exception.ProductNotFoundInRequestException;
+import main.java.br.com.almoxarifado.exception.ProductRequestAlreadyProcessedException;
+import main.java.br.com.almoxarifado.model.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

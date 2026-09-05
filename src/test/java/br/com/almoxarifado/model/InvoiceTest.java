@@ -1,7 +1,9 @@
 package br.com.almoxarifado.model;
 
-import br.com.almoxarifado.exception.InvalidQuantityException;
-import br.com.almoxarifado.exception.InvoiceAlreadyProcessedException;
+import main.java.br.com.almoxarifado.exception.CannotProcessInvoiceWithoutProductsException;
+import main.java.br.com.almoxarifado.exception.InvalidQuantityException;
+import main.java.br.com.almoxarifado.exception.InvoiceAlreadyProcessedException;
+import main.java.br.com.almoxarifado.model.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -115,6 +117,28 @@ public class InvoiceTest {
         assertEquals(200, branchProduct.getQuantity());
         assertEquals(2, branchProduct.getMovementList().size());
 
+    }
+
+    @Test
+    void cannotProcessInvoiceWithoutProducts() {
+        Branch branchSouth = new Branch("001", "Branch South");
+        Invoice invoice = new Invoice("123", branchSouth);
+        assertThrows(CannotProcessInvoiceWithoutProductsException.class, () ->
+                invoice.processInvoice());
+        assertFalse(invoice.isProcessed());
+    }
+
+    @Test
+    void cannotAddProductInvoiceWithInvoiceProcessed() {
+        Product newProduct = new Product("1", "Parafuso 1/2 x 1");
+        Branch branchSouth = new Branch("001", "Branch South");
+        Invoice invoice = new Invoice("123", branchSouth);
+        invoice.addProductInvoice(newProduct, 100, Destination.STOCK);
+        invoice.processInvoice();
+        assertEquals(1, invoice.getProductInvoiceView().size());
+        assertThrows(InvoiceAlreadyProcessedException.class, () ->
+                invoice.addProductInvoice(newProduct,100,Destination.STOCK));
+        assertEquals(1, invoice.getProductInvoiceView().size());
     }
 
 

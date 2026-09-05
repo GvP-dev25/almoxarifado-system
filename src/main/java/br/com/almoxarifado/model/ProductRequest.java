@@ -1,6 +1,7 @@
 package br.com.almoxarifado.model;
 
 import br.com.almoxarifado.exception.*;
+import br.com.almoxarifado.exception.*;
 
 public class ProductRequest {
     private Request request;

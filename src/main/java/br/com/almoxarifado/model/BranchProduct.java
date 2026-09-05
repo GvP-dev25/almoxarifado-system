@@ -1,6 +1,10 @@
 package br.com.almoxarifado.model;
 
 import br.com.almoxarifado.exception.*;
+import br.com.almoxarifado.exception.InsufficientStockException;
+import br.com.almoxarifado.exception.InvalidQuantityException;
+import br.com.almoxarifado.exception.MovementNotFoundException;
+import br.com.almoxarifado.exception.ProductReversalProcessedException;
 
 import java.util.ArrayList;
 import java.util.Collections;

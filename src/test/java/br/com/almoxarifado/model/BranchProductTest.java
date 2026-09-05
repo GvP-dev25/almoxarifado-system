@@ -1,6 +1,10 @@
 package br.com.almoxarifado.model;
 
-import br.com.almoxarifado.exception.*;
+import main.java.br.com.almoxarifado.exception.InsufficientStockException;
+import main.java.br.com.almoxarifado.exception.InvalidQuantityException;
+import main.java.br.com.almoxarifado.exception.MovementNotFoundException;
+import main.java.br.com.almoxarifado.exception.ProductReversalProcessedException;
+import main.java.br.com.almoxarifado.model.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

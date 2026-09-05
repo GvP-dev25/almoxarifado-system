@@ -1,6 +1,6 @@
 package br.com.almoxarifado.model;
 
-import br.com.almoxarifado.exception.InvalidQuantityException;
+import br.com.almoxarifado.exception.CannotProcessInvoiceWithoutProductsException;
 import br.com.almoxarifado.exception.InvoiceAlreadyProcessedException;
 
 import java.time.LocalDateTime;
@@ -34,14 +34,17 @@ public class Invoice {
     }
 
     public void addProductInvoice(Product product, int quantity, Destination destination) {
-        if (quantity <= 0) {
-            throw new InvalidQuantityException();
+        if(processed){
+            throw new InvoiceAlreadyProcessedException();
         }
         ProductInvoice newProductInvoice = new ProductInvoice(product, quantity, destination);
         productInvoiceList.add(newProductInvoice);
     }
 
     public void processInvoice() {
+        if(productInvoiceList.isEmpty()){
+            throw new CannotProcessInvoiceWithoutProductsException();
+        }
         if (processed) {
             throw new InvoiceAlreadyProcessedException();
         }

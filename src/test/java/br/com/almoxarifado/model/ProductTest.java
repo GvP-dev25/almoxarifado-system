@@ -1,5 +1,6 @@
 package br.com.almoxarifado.model;
 
+import main.java.br.com.almoxarifado.model.Product;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
