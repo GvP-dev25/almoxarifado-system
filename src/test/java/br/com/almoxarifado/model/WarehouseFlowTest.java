@@ -1,7 +1,7 @@
 package br.com.almoxarifado.model;
 
-import main.java.br.com.almoxarifado.exception.InsufficientStockException;
-import main.java.br.com.almoxarifado.model.*;
+import br.com.almoxarifado.exception.InsufficientStockException;
+import br.com.almoxarifado.model.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

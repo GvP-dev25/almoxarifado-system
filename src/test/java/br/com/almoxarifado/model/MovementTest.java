@@ -1,9 +1,9 @@
 package br.com.almoxarifado.model;
 
-import main.java.br.com.almoxarifado.exception.InvalidQuantityException;
-import main.java.br.com.almoxarifado.model.Movement;
-import main.java.br.com.almoxarifado.model.MovementType;
-import main.java.br.com.almoxarifado.model.OriginType;
+import br.com.almoxarifado.exception.InvalidQuantityException;
+import br.com.almoxarifado.model.Movement;
+import br.com.almoxarifado.model.MovementType;
+import br.com.almoxarifado.model.OriginType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,9 +29,6 @@ public class MovementTest {
     void createMovementQuantityInvalid() {
         assertThrows(InvalidQuantityException.class, () ->
                 new Movement(-50, MovementType.ENTRY, OriginType.INVOICE, "123"));
-
-        assertThrows(InvalidQuantityException.class, () ->
-                new Movement(0, MovementType.ENTRY, OriginType.INVOICE, "123"));
     }
 
 

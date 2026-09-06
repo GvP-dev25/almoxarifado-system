@@ -1,9 +1,9 @@
 package br.com.almoxarifado.model;
 
-import main.java.br.com.almoxarifado.exception.InvalidQuantityException;
-import main.java.br.com.almoxarifado.model.Destination;
-import main.java.br.com.almoxarifado.model.Product;
-import main.java.br.com.almoxarifado.model.ProductInvoice;
+import br.com.almoxarifado.exception.InvalidQuantityException;
+import br.com.almoxarifado.model.Destination;
+import br.com.almoxarifado.model.Product;
+import br.com.almoxarifado.model.ProductInvoice;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -1,9 +1,9 @@
 package br.com.almoxarifado.model;
 
-import main.java.br.com.almoxarifado.model.Branch;
-import main.java.br.com.almoxarifado.model.BranchProduct;
-import main.java.br.com.almoxarifado.model.OriginType;
-import main.java.br.com.almoxarifado.model.Product;
+import br.com.almoxarifado.model.Branch;
+import br.com.almoxarifado.model.BranchProduct;
+import br.com.almoxarifado.model.OriginType;
+import br.com.almoxarifado.model.Product;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,9 +1,9 @@
 package br.com.almoxarifado.model;
 
-import main.java.br.com.almoxarifado.exception.CannotProcessInvoiceWithoutProductsException;
-import main.java.br.com.almoxarifado.exception.InvalidQuantityException;
-import main.java.br.com.almoxarifado.exception.InvoiceAlreadyProcessedException;
-import main.java.br.com.almoxarifado.model.*;
+import br.com.almoxarifado.exception.CannotProcessInvoiceWithoutProductsException;
+import br.com.almoxarifado.exception.InvalidQuantityException;
+import br.com.almoxarifado.exception.InvoiceAlreadyProcessedException;
+import br.com.almoxarifado.model.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

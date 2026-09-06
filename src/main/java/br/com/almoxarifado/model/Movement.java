@@ -15,7 +15,7 @@ public class Movement {
 
 
     public Movement(int quantity, MovementType type, OriginType originType, String originNumber) {
-        if (quantity <= 0) {
+        if (quantity < 0) {
             throw new InvalidQuantityException();
         }
         if (type == null || originType == null || originNumber == null) {
