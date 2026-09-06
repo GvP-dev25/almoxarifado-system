@@ -1,16 +1,37 @@
 package br.com.almoxarifado.model;
 
+import br.com.almoxarifado.exception.BranchAlreadyExists;
+import br.com.almoxarifado.exception.InvalidProductIdException;
+import br.com.almoxarifado.exception.ProductAlreadyExists;
+
 import java.util.*;
 
 public class Branch {
     private String code, name;
     private final Map<String, BranchProduct> products;
+    private int id;
 
     public Branch(String code, String name) {
         this.code = code;
         this.name = name;
+        id = 0;
         products = new HashMap<>();
 
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void assignId(int id) {
+        if (id <= 0) {
+            throw new InvalidProductIdException();
+        }
+        if (this.id != 0) {
+            throw new BranchAlreadyExists();
+        } else {
+            this.id = id;
+        }
     }
 
     public String getCode() {

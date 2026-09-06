@@ -1,5 +1,8 @@
 package br.com.almoxarifado.model;
 
+import br.com.almoxarifado.exception.BranchAlreadyExists;
+import br.com.almoxarifado.exception.InvalidProductIdException;
+import br.com.almoxarifado.exception.ProductAlreadyExists;
 import br.com.almoxarifado.model.Branch;
 import br.com.almoxarifado.model.BranchProduct;
 import br.com.almoxarifado.model.OriginType;
@@ -16,6 +19,7 @@ public class BranchTest {
         assertEquals("001", branchSouth.getCode());
         assertEquals("Branch South", branchSouth.getName());
         assertEquals(0, branchSouth.getProducts().size());
+        assertEquals(0, branchSouth.getId());
     }
 
     @Test
@@ -81,14 +85,32 @@ public class BranchTest {
         assertEquals(1, branchSouth.getProducts().size());
         assertEquals(100, branchSouth.getProducts().get(0).getQuantity());
         assertEquals(OriginType.INVOICE, branchSouth.getProducts().get(0).getMovementList().get(0).getOriginType());
-        branchSouth.receiveProduct(newProduct,50,OriginType.INVOICE,"12345");
+        branchSouth.receiveProduct(newProduct, 50, OriginType.INVOICE, "12345");
         assertEquals(1, branchSouth.getProducts().size());
         assertEquals(150, branchSouth.getProducts().get(0).getQuantity());
         assertEquals(OriginType.INVOICE, branchSouth.getProducts().get(0).getMovementList().get(1).getOriginType());
         assertEquals(50, branchSouth.getProducts().get(0).getMovementList().get(1).getQuantity());
         assertEquals("12345", branchSouth.getProducts().get(0).getMovementList().get(1).getOriginNumber());
+    }
+
+    @Test
+    void assignIdBranchAlreadyExists() {
+        Branch branchSouth = new Branch("001", "Branch South");
+        assertEquals(0, branchSouth.getId());
+        branchSouth.assignId(28);
+        assertEquals(28, branchSouth.getId());
+        assertThrows(BranchAlreadyExists.class, () ->
+                branchSouth.assignId(28));
+    }
 
 
+    @Test
+    void assignIdWithInvalidId() {
+        Branch branchSouth = new Branch("001", "Branch South");
+        assertThrows(InvalidProductIdException.class, () ->
+                branchSouth.assignId(0));
+        assertThrows(InvalidProductIdException.class, () ->
+                branchSouth.assignId(-10));
     }
 
 
