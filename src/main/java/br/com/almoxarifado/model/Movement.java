@@ -22,7 +22,7 @@ public class Movement {
             throw new NullPointerException();
         }
         if (originNumber.isBlank()) {
-           throw new IllegalArgumentException();
+            throw new IllegalArgumentException();
         }
 
         uuid = UUID.randomUUID();
@@ -31,6 +31,42 @@ public class Movement {
         this.originType = originType;
         this.originNumber = originNumber;
         this.date = LocalDateTime.now();
+    }
+
+    private Movement(UUID uuid, LocalDateTime date, int quantity, MovementType type, OriginType originType, String originNumber) {
+        if (quantity < 0) {
+            throw new InvalidQuantityException();
+        }
+        if (type == null || originType == null || originNumber == null) {
+            throw new NullPointerException();
+        }
+        if (originNumber.isBlank()) {
+            throw new IllegalArgumentException();
+        }
+
+        this.uuid = uuid;
+        this.quantity = quantity;
+        this.movementType = type;
+        this.originType = originType;
+        this.originNumber = originNumber;
+        this.date = date;
+    }
+
+    @Override
+    public String toString() {
+        return "Movement{" +
+                "uuid='" + uuid.toString() + '\'' +
+                ", quantity=" + quantity +
+                ", movementType='" + movementType + '\'' +
+                ", originType='" + originType + '\'' +
+                ", originNumber='" + originNumber + '\'' +
+                ", date='" + date + '\'' +
+                '}';
+    }
+
+    public static Movement reconstructMovement(UUID uuid, LocalDateTime date, int quantity, MovementType type, OriginType originType, String originNumber) {
+        Movement movement = new Movement(uuid, date, quantity, type, originType, originNumber);
+        return movement;
     }
 
     public MovementType getMovementType() {

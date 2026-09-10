@@ -13,6 +13,7 @@ import java.util.List;
 public class BranchProduct {
     private Product product;
     private Branch branch;
+    private int id = 0;
     private int quantity;
     private String location;
     private List<Movement> movementList;
@@ -34,6 +35,25 @@ public class BranchProduct {
         registerMovement(quantity, MovementType.ENTRY, originType, originNumber);
     }
 
+    private BranchProduct(int id, Product product, Branch branch, int quantity, String location, List<Movement> movementList) {
+        if (quantity <= 0) {
+            throw new InvalidQuantityException();
+        }
+        this.id = id;
+        this.product = product;
+        this.branch = branch;
+        this.quantity = quantity;
+        this.location = location;
+        this.movementList = movementList;
+        movementView = Collections.unmodifiableList(movementList);
+    }
+
+
+    public static BranchProduct reconstructor(int bp_id, Product product, Branch branch, int quantity, String location, List<Movement> movementList) {
+        BranchProduct branchProduct = new BranchProduct(bp_id, product, branch, quantity, location, movementList);
+        return branchProduct;
+    }
+
 
     public void addQuantity(int quantity, OriginType originType, String originNumber) {
         if (quantity <= 0) {
@@ -50,8 +70,10 @@ public class BranchProduct {
             throw new InsufficientStockException("Insufficient Stock. Available: " + this.quantity + ", requested: " + quantity);
         }
         this.quantity -= quantity;
-        registerMovement(quantity, MovementType.OUTPUT, originType, originNumber);
-    }
+        if(quantity > 0) {
+            registerMovement(quantity, MovementType.OUTPUT, originType, originNumber);
+        }
+        }
 
     public void processReversal(int quantity, OriginType originType, String originNumber) {
         if (quantity <= 0) {
@@ -95,6 +117,17 @@ public class BranchProduct {
 
     }
 
+    @Override
+    public String toString() {
+        return "BranchProduct{" +
+                "product=" + getProduct().getId() + ", '" + getProduct().getCode() +
+                "' - " + getProduct().getDescription() +
+                ", branch=" + getBranch().getId() + ", '" + getBranch().getCode() +
+                "' - " + getBranch().getName() +
+                ", quantity=" + getQuantity() +
+                ", location='" + getLocation() + '\'' +
+                '}';
+    }
 
     public Product getProduct() {
         return product;
