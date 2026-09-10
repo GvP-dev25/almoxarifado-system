@@ -22,6 +22,10 @@ public class BranchProduct {
     public BranchProduct() {
     }
 
+    public int getId() {
+        return id;
+    }
+
     public BranchProduct(Product product, Branch branch, int quantity, OriginType originType, String originNumber) {
         if (quantity <= 0) {
             throw new InvalidQuantityException();
